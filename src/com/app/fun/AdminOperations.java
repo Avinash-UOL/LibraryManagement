@@ -281,5 +281,173 @@ public class AdminOperations {
 		}
 
 	}
+	
+	public static void addBook() {
+
+		JFrame addFrame;
+		addFrame = Library.newJframeWindow("Add Book", 600, 400, JFrame.DISPOSE_ON_CLOSE);
+		JLabel name, auth, gen, price;
+		JTextField nameIN = null, authIN = null, genIN = null, priceIN = null;
+		JButton addBOOK = new JButton("Add Book");
+		addFrame.add(addBOOK);
+		addBOOK.setBounds(20, 300, 120, 30);
+
+		name = new JLabel("Enter Book's Name");
+		auth = new JLabel("Enter Book's Author");
+		gen = new JLabel("Enter Book's Genre");
+		price = new JLabel("Enter Book's Price");
+
+		JLabel[] lables = { name, auth, gen, price };
+		String[] lableINPUT = new String[lables.length];
+		JTextField[] inputs = { nameIN, authIN, genIN, priceIN };
+
+		for (int i = 0; i < inputs.length; i++) {
+			inputs[i] = new JTextField();
+
+			addFrame.add(inputs[i]);
+		}
+
+		int yoff = 0;
+		for (int i = 0; i < lables.length; i++) {
+
+			lables[i].setBounds(20, 40 + yoff, 120, 20);
+			addFrame.add(lables[i]);
+			inputs[i].setBounds(150, 40 + yoff, 400, 40);
+			inputs[i].setFont(new Font("Arial",Font.PLAIN,20));
+			yoff += 60;
+		}
+		
+		addFrame.setVisible(true);
+
+		addBOOK.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				lableINPUT[0] = inputs[0].getText();
+				lableINPUT[1] = inputs[1].getText();
+				lableINPUT[2] = inputs[2].getText();
+				lableINPUT[3] = inputs[3].getText();
+				boolean allow = true;
+				for (int i = 0; i < 4; i++) {
+					if (lableINPUT[i].isEmpty()) {
+						allow = false;
+						JOptionPane.showMessageDialog(null, "Please don't leave any field blank", "Error",
+								JOptionPane.ERROR_MESSAGE);
+						break;
+					}
+				}
+				
+				try {
+					Float.parseFloat(lableINPUT[3]);
+				}catch(NumberFormatException numExep) {
+					allow = false;
+					JOptionPane.showMessageDialog(null, "Please enter numeric value for price", "Error",
+							JOptionPane.ERROR_MESSAGE);
+				}
+				
+				
+				if (allow) {
+					Connection connection = MySQLDriver.connect("root", "");
+
+					MySQLDriver.insertToTable(connection,
+							"insert into bookData(name,author,genre,price,issued) values('" + lableINPUT[0] + "','"
+									+ lableINPUT[1] + "','" + lableINPUT[2] + "','" + lableINPUT[3] + "',0)");
+					JOptionPane.showMessageDialog(null, "Book added to database", "Success",
+							JOptionPane.INFORMATION_MESSAGE);
+					addFrame.setVisible(false);
+					try {
+						connection.close();
+						System.out.println("Connection closed");
+					} catch (SQLException e1) {
+
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
+
+	}
+	
+	public static void deleteBooks() {
+
+		Connection connection = MySQLDriver.connect("root", "");
+		try {
+			Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+					ResultSet.CONCUR_READ_ONLY);
+			ResultSet set = statement.executeQuery("select * from bookData");
+			ResultSetMetaData metaData = set.getMetaData();
+			String[] cols = { metaData.getColumnName(1), metaData.getColumnName(2), metaData.getColumnName(3),
+					metaData.getColumnName(4), metaData.getColumnName(5), metaData.getColumnName(6) };
+
+			set.last();
+			int size = set.getRow();
+			set.beforeFirst();
+
+			String[][] data;
+			data = new String[size][];
+			for (int i = 0; i < size; i++) {
+				data[i] = new String[6];
+			}
+
+			int i = 0;
+			while (set.next()) {
+				data[i][0] = String.valueOf(set.getInt("book_id"));
+				data[i][1] = set.getString("name");
+				data[i][2] = set.getString("author");
+				data[i][3] = set.getString("genre");
+				data[i][4] = String.valueOf(set.getFloat("price"));
+				data[i][5] = String.valueOf(set.getInt("issued"));
+				i++;
+			}
+			connection.close();
+			makeATableBoii(data, cols, "Delete Books");
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+
+	}
+	
+	public static void showBooks() {
+
+		Connection connection = MySQLDriver.connect("root", "");
+		try {
+			Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+					ResultSet.CONCUR_READ_ONLY);
+			ResultSet set = statement.executeQuery("select * from bookData");
+			ResultSetMetaData metaData = set.getMetaData();
+			String[] cols = { metaData.getColumnName(1), metaData.getColumnName(2), metaData.getColumnName(3),
+					metaData.getColumnName(4), metaData.getColumnName(5), metaData.getColumnName(6) };
+
+			set.last();
+			int size = set.getRow();
+			set.beforeFirst();
+
+			String[][] data;
+			data = new String[size][];
+			for (int i = 0; i < size; i++) {
+				data[i] = new String[6];
+			}
+
+			int i = 0;
+			while (set.next()) {
+				data[i][0] = String.valueOf(set.getInt("book_id"));
+				data[i][1] = set.getString("name");
+				data[i][2] = set.getString("author");
+				data[i][3] = set.getString("genre");
+				data[i][4] = String.valueOf(set.getFloat("price"));
+				data[i][5] = String.valueOf(set.getInt("issued"));
+				i++;
+			}
+			connection.close();
+			makeATableBoii(data, cols, "Book Shelf");
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+
+	}
 
 }
