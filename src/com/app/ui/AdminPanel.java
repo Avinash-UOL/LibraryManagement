@@ -15,6 +15,10 @@ import com.app.fun.AdminOperations;
 import com.app.fun.GeneralOperations;
 
 public class AdminPanel {
+	
+	static String[] names = { "Add User", "View Users", "Delete User" };
+	static JButton viewUsers = null, addUser = null, deleteUser = null;
+	static JButton[] buttons = { addUser, viewUsers, deleteUser };
 
 	public static void ShowAdminMenu(String name, int id) throws IOException {
 
@@ -46,6 +50,36 @@ public class AdminPanel {
 		//JButton ResetInc = new JButton();
 		int xoff = 0, yoff = 0;
 		
+		for (int i = 0; i < buttons.length; i++) {
+			if (i == buttons.length - 1) {
+				buttons[i] = new JButton();
+				Image dimg = ImageIO.read(Library.class.getResourceAsStream("/logout.png")).getScaledInstance(50, 50,Image.SCALE_SMOOTH);
+				buttons[i].setIcon(new ImageIcon(dimg));
+				// ResetInc.setIcon(new ImageIcon(
+				// "C:\\Users\\Dell\\eclipse-workspace\\LibManagement\\src\\resources\\refresh.png"));
+				//LibMain.frame.add(ResetInc);
+				// ResetInc.setBounds(700, 60, 50, 54);
+
+				//Library.frame.add(buttons[i]);
+				buttons[i].setBounds(1120, 10, 50, 50);
+				adminFrame.add(buttons[i]);
+				
+				break;
+			}
+			buttons[i] = new JButton(names[i]);
+			//Library.frame.add(buttons[i]);
+			//adminFrame.add(buttons[i]);
+			buttons[i].setBounds(130 + xoff, 190 + yoff, 180, 45);
+			buttons[i].setFont(new Font("Arial", Font.BOLD, 16));
+			if (xoff >= 630) {
+				xoff = 0;
+				yoff = 70;
+			} else {
+				xoff += 190;
+			}
+			adminFrame.add(buttons[i]);
+		}
+		
 		JButton enrollStudent = new JButton("Enroll Student");
 		enrollStudent.setBounds(400, 400, 180, 45);
 		enrollStudent.setFont(new Font("Arial", Font.BOLD, 20));
@@ -69,6 +103,24 @@ public class AdminPanel {
 				AdminOperations.showStudents();
 			}
 		});
+		
+		for (int i = 0; i < buttons.length; i++) {
+			final int j = i;
+			buttons[j].addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					// TODO Auto-generated method stub
+					if (j == 0) {
+						AdminOperations.addUser();
+					} else if (j == 1) {
+						AdminOperations.viewUsers();
+					} else if (j == 2) {
+						AdminOperations.deleteUsers();
+					}
+
+				}
+			});
+		}
 		
 		adminFrame.add(background);
 		adminFrame.setVisible(true);

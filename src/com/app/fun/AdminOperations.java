@@ -141,5 +141,145 @@ public class AdminOperations {
 			}
 		});
 	}
+	
+	public static void addUser() {
+		JFrame AddUserFrame;
+		JLabel userN = new JLabel("Username");
+		JLabel userP = new JLabel("Password");
+		JLabel userConfP = new JLabel("Confirm Password");
+		JTextField userInN = new JTextField();
+		JPasswordField userConfInP = new JPasswordField();
+		JPasswordField userInP = new JPasswordField();
+		JButton addUser = new JButton("Add user");
+
+		AddUserFrame = Library.newJframeWindow("Add a new user", 600, 310, JFrame.DISPOSE_ON_CLOSE);
+
+		userN.setBounds(30, 15, 100, 30);
+		userP.setBounds(30, 60, 100, 30);
+		userConfP.setBounds(30, 105, 150, 30);
+		userInN.setBounds(150, 15, 320, 40);
+		userInN.setFont(new Font("Arial",Font.PLAIN,20));
+		userInP.setBounds(150, 60, 320, 40);
+		userInP.setFont(new Font("Arial",Font.PLAIN,20));
+		userConfInP.setBounds(150, 105, 320, 40);
+		userConfInP.setFont(new Font("Arial",Font.PLAIN,20));
+		addUser.setBounds(130, 170, 120, 25);
+
+		AddUserFrame.add(userN);
+		AddUserFrame.add(userP);
+		AddUserFrame.add(userConfP);
+		AddUserFrame.add(userInN);
+		AddUserFrame.add(userInP);
+		AddUserFrame.add(userConfInP);
+		AddUserFrame.add(addUser);
+		
+		AddUserFrame.setVisible(true);
+
+		addUser.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				String uname = userInN.getText();
+				String upass = String.valueOf(userInP.getPassword());
+				String cupass = String.valueOf(userConfInP.getPassword());
+				if (uname.isEmpty()) {
+					JOptionPane.showMessageDialog(null, "Please Provide username");
+				} else if (upass.isEmpty()) {
+					JOptionPane.showMessageDialog(null, "Please Provide password");
+				} else if (cupass.isEmpty()) {
+					JOptionPane.showMessageDialog(null, "Please Confirm password");
+				} else if (!cupass.equals(upass)) {
+					JOptionPane.showMessageDialog(null, "Please Enter password correctly");
+				} else {
+					Connection connection = MySQLDriver.connect("root", "");
+					String query = "insert into users(username,password) values('" + uname + "' , '" + upass + "')";
+					JOptionPane.showMessageDialog(null,"User Added");
+					MySQLDriver.insertToTable(connection, query);
+					
+					AddUserFrame.setVisible(false);
+					AddUserFrame.dispose();
+					
+					try {
+						connection.close();
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (Exception e2) {
+						e2.printStackTrace();
+					}
+
+				}
+			}
+
+		});
+
+	}
+	
+	public static void viewUsers() {
+
+		Connection connection = MySQLDriver.connect("root", "");
+		try {
+			Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+					ResultSet.CONCUR_READ_ONLY);
+			ResultSet set = statement.executeQuery("select * from users");
+			ResultSetMetaData metaData = set.getMetaData();
+			String[] cols = { metaData.getColumnName(1), metaData.getColumnName(2) };
+			set.last();
+			int size = set.getRow();
+			set.beforeFirst();
+
+			String[][] data;
+			data = new String[size][];
+			for (int i = 0; i < size; i++) {
+				data[i] = new String[2];
+			}
+
+			int i = 0;
+			while (set.next()) {
+				data[i][0] = String.valueOf(set.getInt("id"));
+				data[i][1] = set.getString("username");
+				i++;
+			}
+			connection.close();
+			makeATableBoii(data, cols, "Users");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
+	
+	public static void deleteUsers() {
+
+		Connection connection = MySQLDriver.connect("root", "");
+		try {
+			Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+					ResultSet.CONCUR_READ_ONLY);
+			ResultSet set = statement.executeQuery("select * from users");
+			ResultSetMetaData metaData = set.getMetaData();
+			String[] cols = { metaData.getColumnName(1), metaData.getColumnName(2) };
+			set.last();
+			int size = set.getRow();
+			set.beforeFirst();
+
+			String[][] data;
+			data = new String[size][];
+			for (int i = 0; i < size; i++) {
+				data[i] = new String[2];
+			}
+
+			int i = 0;
+			while (set.next()) {
+				data[i][0] = String.valueOf(set.getInt("id"));
+				data[i][1] = set.getString("username");
+				i++;
+			}
+			connection.close();
+			makeATableBoii(data, cols, "Delete Users");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
 
 }
