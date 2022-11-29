@@ -16,9 +16,9 @@ import com.app.fun.GeneralOperations;
 
 public class AdminPanel {
 	
-	static String[] names = { "Add User", "View Users", "Delete User", "Add Book", "View Books", "Delete Books"};
-	static JButton viewUsers = null, addUser = null, deleteUser = null, viewBooks = null, addBook = null, deleteBooks = null;
-	static JButton[] buttons = { addUser, viewUsers, deleteUser, addBook, viewBooks, deleteBooks };
+	static String[] names = { "Add User", "View Users", "Delete User", "Add Book", "View Books", "Delete Books", "Issue Book"};
+	static JButton viewUsers = null, addUser = null, deleteUser = null, viewBooks = null, addBook = null, deleteBooks = null, issueBook = null;
+	static JButton[] buttons = { addUser, viewUsers, deleteUser, addBook, viewBooks, deleteBooks, issueBook };
 
 	public static void ShowAdminMenu(String name, int id) throws IOException {
 
@@ -122,6 +122,8 @@ public class AdminPanel {
 						AdminOperations.showBooks();
 					} else if (j == 9) {
 						AdminOperations.deleteBooks();
+					} else if (j == 2) {
+						AdminOperations.issueBook();
 					}
 
 				}
