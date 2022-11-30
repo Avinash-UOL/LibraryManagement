@@ -15,10 +15,12 @@ import com.app.fun.AdminOperations;
 import com.app.fun.GeneralOperations;
 
 public class AdminPanel {
-	
-	static String[] names = { "Add User", "View Users", "Delete User", "Add Book", "View Books", "Delete Books", "Issue Book"};
-	static JButton viewUsers = null, addUser = null, deleteUser = null, viewBooks = null, addBook = null, deleteBooks = null, issueBook = null;
-	static JButton[] buttons = { addUser, viewUsers, deleteUser, addBook, viewBooks, deleteBooks, issueBook };
+	static String[] names = { "Add User", "Add Book", "Issue Book", "Return Book", "View Books", "View Users", "View Issued Books",  
+			 "View Returned Books", "Delete User", "Delete Books", "Logout" };
+	static JButton viewBooks = null, viewUsers = null, viewIssBooks = null, issueBook = null, addUser = null,
+			addBook = null, returnBook = null, viewRetBooks = null, deleteUser = null, deleteBooks = null, logout = null;
+	static JButton[] buttons = { addUser, addBook, issueBook, returnBook, viewBooks, viewUsers, viewIssBooks, 
+			viewRetBooks, deleteUser, deleteBooks, logout };
 
 	public static void ShowAdminMenu(String name, int id) throws IOException {
 
@@ -49,7 +51,7 @@ public class AdminPanel {
 		
 		//JButton ResetInc = new JButton();
 		int xoff = 0, yoff = 0;
-		
+
 		for (int i = 0; i < buttons.length; i++) {
 			if (i == buttons.length - 1) {
 				buttons[i] = new JButton();
@@ -113,17 +115,36 @@ public class AdminPanel {
 					if (j == 0) {
 						AdminOperations.addUser();
 					} else if (j == 1) {
-						AdminOperations.viewUsers();
-					} else if (j == 2) {
-						AdminOperations.deleteUsers();
-					} else if (j == 1) {
 						AdminOperations.addBook();
-					} else if (j == 4) {
-						AdminOperations.showBooks();
-					} else if (j == 9) {
-						AdminOperations.deleteBooks();
 					} else if (j == 2) {
 						AdminOperations.issueBook();
+					} else if (j == 3) {
+						AdminOperations.viewIssuedBooks("Return Book");
+					} else if (j == 4) {
+						AdminOperations.showBooks();
+					} else if (j == 5) {
+						AdminOperations.viewUsers();
+					} else if (j == 6) {
+						AdminOperations.viewIssuedBooks("Issued Book");
+					} else if (j == 7) {
+						AdminOperations.viewReturnedBooks();
+					} else if (j == 8) {
+						AdminOperations.deleteUsers();
+					} else if (j == 9) {
+						AdminOperations.deleteBooks();
+					} else if (j == 10) {
+						//AdminOperations.logout();
+						int n = JOptionPane.showConfirmDialog(null, "Do you want to logout");
+						if (n == JOptionPane.YES_OPTION) {
+							adminFrame.dispose();
+							adminFrame.setVisible(false);
+							try {
+								Library.mainMenu();
+							} catch (Exception e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+						}
 					}
 
 				}

@@ -35,7 +35,58 @@ public class AdminOperations {
 		dataFrame.setLocationRelativeTo(null);
 		dataFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		dataFrame.add(scrollPane);
-		dataFrame.setVisible(true);	
+		dataFrame.setVisible(true);
+		
+		bookData.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+			
+			@Override
+	        public void valueChanged(ListSelectionEvent event) {
+	            String id = bookData.getValueAt(bookData.getSelectedRow(), 0).toString();
+	            if(title.equalsIgnoreCase("Delete Books") || title.equalsIgnoreCase("Delete Users")) {
+	            	int n = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete ? ");
+	        		if (n == JOptionPane.YES_OPTION) {
+	        			Connection connection = MySQLDriver.connect("root", "");
+	        			try {
+	        				Statement statement = connection.createStatement();
+	        				if(title.equalsIgnoreCase("Delete Books")) {
+	        					if(statement.executeUpdate("Delete from bookData where book_id=" + id) == 1) {
+	        						//System.out.println("Record Deleted");
+	        						JOptionPane.showMessageDialog(null, "Record Deleted", "Success",
+	        								JOptionPane.INFORMATION_MESSAGE);
+	        						dataFrame.setVisible(false);
+	        						deleteBooks();
+	        					}else {
+	        						JOptionPane.showMessageDialog(null, "Failed to Delete", "Failed",
+	        								JOptionPane.INFORMATION_MESSAGE);
+	        						//System.out.println("Delete Failed");
+	        					}
+	        				}else if(title.equalsIgnoreCase("Delete Users")) {
+	        					if(statement.executeUpdate("Delete from users where id=" + id) == 1) {
+	        						//System.out.println("Record Deleted");
+	        						JOptionPane.showMessageDialog(null, "Record Deleted", "Success",
+	        								JOptionPane.INFORMATION_MESSAGE);
+	        						dataFrame.setVisible(false);
+	        						deleteUsers();
+	        					}else {
+	        						JOptionPane.showMessageDialog(null, "Failed to Delete", "Failed",
+	        								JOptionPane.INFORMATION_MESSAGE);
+	        						//System.out.println("Delete Failed");
+	        					}
+	        				}
+	    					
+	        			} catch (Exception e) {
+	        				e.printStackTrace();
+	        			}
+	        		}
+	            }else if(title.equalsIgnoreCase("Return Book")) {
+	            	int n = JOptionPane.showConfirmDialog(null, "Are you sure you want to return this book ? ");
+	        		if (n == JOptionPane.YES_OPTION) {
+	        			returnBook(id,dataFrame);
+	        		}
+	            }
+	        }
+	    });
+		
 	}
 	
 	public static void showStudents() {
@@ -548,6 +599,192 @@ public class AdminOperations {
 				}
 			}
 		});
+	}
+	
+	public static void returnBook(String bookId, JFrame dataFrame) {
+		JFrame returnFrame;
+		returnFrame = Library.newJframeWindow("Return Book", 600, 500, JFrame.DISPOSE_ON_CLOSE);
+		JLabel id, book_name, Uroll, issuer_name, issue_Date, rDate;
+		JTextField idIN = null, bookName = null, rdateIN = null, UrollIN = null, issuerName = null, issueDate = null;
+		JButton returnBut = new JButton("Confirm Return");
+		returnFrame.add(returnBut);
+		returnBut.setBounds(20, 400, 120, 30);
+
+		id = new JLabel("Book Id");
+		book_name = new JLabel("Book Name");
+		Uroll = new JLabel("Student Roll No");
+		issuer_name = new JLabel("Issuer Name");
+		issue_Date = new JLabel("Date of issue");
+		rDate = new JLabel("Date of return");
+
+		JLabel[] lables = { id, book_name, Uroll, issuer_name, issue_Date, rDate };
+		String[] lableINPUT = new String[lables.length];
+		JTextField[] inputs = { idIN, bookName, UrollIN, issuerName, issueDate, rdateIN };
+
+		for (int i = 0; i < inputs.length; i++) {
+			inputs[i] = new JTextField();
+			returnFrame.add(inputs[i]);
+		}
+
+		int yoff = 0;
+		for (int i = 0; i < lables.length; i++) {
+			lables[i].setBounds(20, 40 + yoff, 120, 20);
+			returnFrame.add(lables[i]);
+			inputs[i].setBounds(150, 40 + yoff, 320, 40);
+			inputs[i].setFont(new Font("Arial",Font.PLAIN,20));
+			yoff += 60;
+		}
+		
+		Connection connection = MySQLDriver.connect("root", "");
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet set1 = statement.executeQuery("Select * from issuedBookData where id=" + bookId);
+			int bkId = 0;
+			
+			if(set1.next()) {
+				bkId = set1.getInt("book_id");
+			}
+			
+			ResultSet set2 = statement.executeQuery("Select * from issuedBookData where book_id=" + bkId);
+			
+			if(set2.next()) {
+				String bkName = set2.getString("book_name");
+				String issRollNo = set2.getString("issuer_roll_no");
+				String issName = set2.getString("issuer_name");
+				String issDate = set2.getDate("issue_date").toString();
+				String retDate = new java.sql.Date(date.getTime()).toString();
+				
+				inputs[0].setText(String.valueOf(bkId));
+				inputs[0].setEditable(false);
+				inputs[1].setText(bkName);
+				inputs[1].setEditable(false);
+				inputs[2].setText(issRollNo);
+				inputs[2].setEditable(false);
+				inputs[3].setText(issName);
+				inputs[3].setEditable(false);
+				inputs[4].setText(issDate);
+				inputs[4].setEditable(false);
+				inputs[5].setText(retDate);
+				inputs[5].setEditable(false);
+			}
+			
+			//connection.close();
+			//System.out.println("Connection closed");
+			statement.close();
+		} catch (SQLException e1) {
+
+			e1.printStackTrace();
+		}
+		
+		returnFrame.setVisible(true);
+
+		returnBut.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					Statement statement = connection.createStatement();
+					MySQLDriver.insertToTable(connection,
+							"insert into returnedBookData(book_id,issuer_roll_no,issuer_name,issue_date,return_date) values('"
+									+ inputs[0].getText() + "','" + inputs[2].getText() + "','" + inputs[3].getText() + "','" + inputs[4].getText()
+									+ "','" + inputs[5].getText() + "')");
+					statement.executeUpdate("delete from issuedBookData where book_id=" + inputs[0].getText());
+					int issue = 0;
+					MySQLDriver.insertToTable(connection,
+							"update bookData set issued =" + issue + " where book_id=" + inputs[0].getText());
+					JOptionPane.showMessageDialog(null, "Book returned");
+					connection.close();
+					System.out.println("Connection closed");
+					statement.close();
+					returnFrame.setVisible(false);
+					dataFrame.setVisible(false);
+					viewIssuedBooks("Return Book");
+				}catch(Exception e2) {
+					e2.printStackTrace();
+				}
+			}
+		});
+
+	}
+	
+	public static void viewIssuedBooks(String title) {
+		Connection connection = MySQLDriver.connect("root", "");
+		try {
+			Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+					ResultSet.CONCUR_READ_ONLY);
+			ResultSet set = statement.executeQuery("select * from issuedBookData");
+			ResultSetMetaData metaData = set.getMetaData();
+
+			String[] cols = { metaData.getColumnName(1), metaData.getColumnName(2), metaData.getColumnName(3),
+					metaData.getColumnName(4), metaData.getColumnName(5), metaData.getColumnName(6) };
+
+			set.last();
+			int size = set.getRow();
+			set.beforeFirst();
+
+			String[][] data;
+			data = new String[size][];
+			for (int i = 0; i < size; i++) {
+				data[i] = new String[6];
+			}
+
+			int i = 0;
+			while (set.next()) {
+				data[i][0] = String.valueOf(set.getInt("id"));
+				data[i][1] = String.valueOf(set.getInt("book_id"));
+				data[i][2] = set.getString("book_name");
+				data[i][3] = set.getString("issuer_roll_no");
+				data[i][4] = set.getString("issuer_name");
+				data[i][5] = String.valueOf(set.getDate("issue_date"));
+				i++;
+			}
+			connection.close();
+			makeATableBoii(data, cols, title);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
+	
+	public static void viewReturnedBooks() {
+		Connection connection = MySQLDriver.connect("root", "");
+		try {
+			Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+					ResultSet.CONCUR_READ_ONLY);
+			ResultSet set = statement.executeQuery("select * from returnedBookData");
+			ResultSetMetaData metaData = set.getMetaData();
+
+			String[] cols = { metaData.getColumnName(1), metaData.getColumnName(2), metaData.getColumnName(3),
+					metaData.getColumnName(4), metaData.getColumnName(5) };
+
+			set.last();
+			int size = set.getRow();
+			set.beforeFirst();
+
+			String[][] data;
+			data = new String[size][];
+			for (int i = 0; i < size; i++) {
+				data[i] = new String[6];
+			}
+
+			int i = 0;
+			while (set.next()) {
+				data[i][0] = String.valueOf(set.getInt("id"));
+				data[i][1] = String.valueOf(set.getInt("book_id"));
+				data[i][2] = set.getString("issuer_roll_no");
+				data[i][3] = String.valueOf(set.getDate("issue_date"));
+				data[i][4] = String.valueOf(set.getDate("Return_date"));
+				i++;
+			}
+			connection.close();
+
+			makeATableBoii(data, cols, "Returned Books");
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 }
