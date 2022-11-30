@@ -15,12 +15,15 @@ import com.app.fun.AdminOperations;
 import com.app.fun.GeneralOperations;
 
 public class AdminPanel {
-	static String[] names = { "Add User", "Add Book", "Issue Book", "Return Book", "View Books", "View Users", "View Issued Books",  
+	public static String[] names = { "Add User", "Add Book", "Issue Book", "Return Book", "View Books", "View Users", "View Issued Books",  
 			 "View Returned Books", "Delete User", "Delete Books", "Logout" };
-	static JButton viewBooks = null, viewUsers = null, viewIssBooks = null, issueBook = null, addUser = null,
+	public static JButton viewBooks = null, viewUsers = null, viewIssBooks = null, issueBook = null, addUser = null,
 			addBook = null, returnBook = null, viewRetBooks = null, deleteUser = null, deleteBooks = null, logout = null;
-	static JButton[] buttons = { addUser, addBook, issueBook, returnBook, viewBooks, viewUsers, viewIssBooks, 
+	public static JButton[] buttons = { addUser, addBook, issueBook, returnBook, viewBooks, viewUsers, viewIssBooks, 
 			viewRetBooks, deleteUser, deleteBooks, logout };
+	public static JButton enrollStudent;
+	public static JButton viewStudent;
+	public static JFrame adminFrame;
 
 	public static void ShowAdminMenu(String name, int id) throws IOException {
 
@@ -33,7 +36,7 @@ public class AdminPanel {
 		label.setForeground(Color.white);
 		label.setBorder(BorderFactory.createLineBorder(Color.black));
 		
-		JFrame adminFrame = new JFrame("Admin Functions");
+		adminFrame = new JFrame("Admin Functions");
 		
 		JLabel background = new JLabel(new ImageIcon(Library.bgImage));
 		
@@ -82,7 +85,7 @@ public class AdminPanel {
 			adminFrame.add(buttons[i]);
 		}
 		
-		JButton enrollStudent = new JButton("Enroll Student");
+		enrollStudent = new JButton("Enroll Student");
 		enrollStudent.setBounds(400, 400, 180, 45);
 		enrollStudent.setFont(new Font("Arial", Font.BOLD, 20));
 		adminFrame.add(enrollStudent);
@@ -94,7 +97,7 @@ public class AdminPanel {
 			}
 		});
 		
-		JButton viewStudent = new JButton("View Students");
+		viewStudent = new JButton("View Students");
 		viewStudent.setBounds(620, 400, 180, 45);
 		viewStudent.setFont(new Font("Arial", Font.BOLD, 20));
 		adminFrame.add(viewStudent);

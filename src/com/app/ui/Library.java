@@ -21,8 +21,18 @@ import com.app.fun.GeneralOperations;
 public class Library {
 	public static JFrame frame;
 	public static BufferedImage bgImage;
+	public static ResultSet resultSet;
+	public static JLabel userN;
+	public static JLabel userP;
+	public static JTextField userInN;
+	public static JPasswordField userInP;
+	public static JButton login;
+	public static JButton exit;
+	public static JOptionPane pane;
+	
 
 	public static void main(String[] args) {
+		//AdminOperations.refresh();
 		try {
 			mainMenu();
 		} catch (Exception e) {
@@ -36,7 +46,7 @@ public class Library {
 		newFrame("Welcome to the Library", 800, 700);
 		frame.setLayout(null);
 
-		bgImage = ImageIO.read(Library.class.getResourceAsStream("/back1.jpg"));
+		bgImage = ImageIO.read(Library.class.getResourceAsStream("/background.jpg"));
 		//JLabel background = new JLabel(new ImageIcon(resoucePath));
 		JLabel background = new JLabel(new ImageIcon(bgImage));
 		JLabel labelT = new JLabel("Welcome to the Library");
@@ -78,16 +88,16 @@ public class Library {
 	}
 	
 	public static void login() {
-		JLabel userN = new JLabel("Username");
+		userN = new JLabel("Username");
 		userN.setForeground(Color.white);
 		userN.setFont(new Font("Arial", Font.BOLD, 20));
-		JLabel userP = new JLabel("Password");
+		userP = new JLabel("Password");
 		userP.setForeground(Color.white);
 		userP.setFont(new Font("Arial", Font.BOLD, 20));
-		JTextField userInN = new JTextField();
-		JPasswordField userInP = new JPasswordField();
-		JButton login = new JButton("Login");
-		JButton exit = new JButton("Exit");
+		userInN = new JTextField();
+		userInP = new JPasswordField();
+		login = new JButton("Login");
+		exit = new JButton("Exit");
 		
 		userN.setBounds(460, 130, 120, 70);
 		userP.setBounds(460, 180, 120, 70);
@@ -121,9 +131,10 @@ public class Library {
 					try {
 						statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
 								ResultSet.CONCUR_UPDATABLE);
-						ResultSet resultSet = statement.executeQuery(st);
+						resultSet = statement.executeQuery(st);
 						if (resultSet.next() == false) {
-							JOptionPane.showMessageDialog(frame, "Invalid Login Credentials", "Error", JOptionPane.ERROR_MESSAGE);
+							//pane.showMessageDialog(frame, "Invalid Login Credentials", "Error", JOptionPane.ERROR_MESSAGE);
+							GeneralOperations.alert("Error","Invalid Login Credentials");
 						} else {
 							frame.dispose();
 							frame.setVisible(false);
