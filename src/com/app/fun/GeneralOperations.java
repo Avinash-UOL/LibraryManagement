@@ -1,8 +1,11 @@
 package com.app.fun;
 
+import java.awt.Color;
 import java.awt.Font;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -22,73 +25,128 @@ import com.app.ui.Library;
 
 public class GeneralOperations {
 	
-	public static void login() {
-		JFrame logFrame;
-		JLabel userN = new JLabel("Username");
-		JLabel userP = new JLabel("Password");
-		JTextField userInN = new JTextField();
-		JPasswordField userInP = new JPasswordField();
-		JButton login = new JButton("Login");
+	public static JFrame alertFrame;
+	public static JFrame optionFrame;
+	public static JButton okButton;
+	public static JButton yesButton;
+	public static JButton noButton;
+	public static JLabel message;
+	
+	public static String processedID = "";
+	
+	
+	public static void alert(String alertType, String messageText) {
+		okButton = new JButton("OK");
+		okButton.setBounds(20, 80, 80, 25);
 		
-		userN.setBounds(30, 15, 100, 30);
-		userP.setBounds(30, 50, 100, 30);
-		userInN.setBounds(110, 15, 100, 30);
-		userInP.setBounds(110, 50, 100, 30);
-		login.setBounds(130, 90, 80, 25);
-
-		logFrame = Library.newJframeWindow("Login", 400, 180, JFrame.DISPOSE_ON_CLOSE);
+		message = new JLabel(messageText);
+		message.setForeground(Color.black);
+		message.setFont(new Font("Arial", Font.BOLD, 15));
+		message.setBounds(20, 10, 300, 80);
 		
-		logFrame.add(userN);
-		logFrame.add(userP);
-		logFrame.add(userInN);
-		logFrame.add(userInP);
-		logFrame.add(login);
+		if(alertType.equalsIgnoreCase("Error")) {
+			alertFrame = Library.newJframeWindow("Error", 350, 150, JFrame.DISPOSE_ON_CLOSE);
+			alertFrame.add(message);
+			alertFrame.add(okButton);
+		} else if(alertType.equalsIgnoreCase("Success")) {
+			alertFrame = Library.newJframeWindow("Success", 350, 150, JFrame.DISPOSE_ON_CLOSE);
+			alertFrame.add(message);
+			alertFrame.add(okButton);
+		}
 		
-		logFrame.setVisible(true);
+		alertFrame.setVisible(true);
 		
-		login.addActionListener(new ActionListener() {
+		okButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				String uname = userInN.getText();
-				String upass = String.valueOf(userInP.getPassword());
-				if (uname == "") {
-					JOptionPane.showMessageDialog(null, "Please Enter username");
-				} else if (upass == "") {
-					JOptionPane.showMessageDialog(null, "Please Enter password");
-				} else {
-
-					Connection connection = MySQLDriver.connect("root", "");
-					String st = ("select * from users where username='" + uname + "' and password='" + upass + "'");
-					Statement statement;
-					try {
-						statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
-								ResultSet.CONCUR_UPDATABLE);
-						ResultSet resultSet = statement.executeQuery(st);
-						if (resultSet.next() == false) {
-							JOptionPane.showMessageDialog(logFrame, "No user", "Error", JOptionPane.ERROR_MESSAGE);
-						} else {
-							logFrame.dispose();
-							resultSet.beforeFirst();
-							resultSet.next();
-							String name = resultSet.getString("username");
-							String pass = resultSet.getString("password");
-							int id = resultSet.getInt("id");
-							//System.out.println("Enter as : " + name + " , " + pass);
-							AdminPanel.ShowAdminMenu(name, id);
-							statement.close();
-							connection.close();
-						}
-					} catch (SQLException | IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-
+				alertFrame.setVisible(false);
+				alertFrame.dispose();
+				if(messageText.equalsIgnoreCase("Book Deleted")) {
+					AdminOperations.dataFrame.setVisible(false);
+					AdminOperations.deleteBooks();
+				}else if(messageText.equalsIgnoreCase("User Deleted")) {
+					AdminOperations.dataFrame.setVisible(false);
+					AdminOperations.deleteUsers();
 				}
-
 			}
 		});
+	}
+	
+	public static void confirmation(String title, String messageText, String id) {
+		processedID = id;
+		yesButton = new JButton("Yes");
+		yesButton.setBounds(20, 80, 80, 25);
+		
+		noButton = new JButton("No");
+		noButton.setBounds(100, 80, 80, 25);
+		
+		message = new JLabel(messageText);
+		message.setForeground(Color.black);
+		message.setFont(new Font("Arial", Font.BOLD, 15));
+		message.setBounds(20, 10, 300, 80);
+		
+		optionFrame = Library.newJframeWindow(title, 350, 150, JFrame.DISPOSE_ON_CLOSE);
+		optionFrame.add(message);
+		optionFrame.add(yesButton);
+		optionFrame.add(noButton);
+		
+		optionFrame.setVisible(true);
+		
+		yesButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				AdminOperations.dataFrame.setVisible(false);
+				AdminOperations.dataFrame.dispose();
+				optionFrame.setVisible(false);
+				optionFrame.dispose();
+				Connection connection = MySQLDriver.connect("root", "");	
+				try {
+    				Statement statement = connection.createStatement();
+    				if(title.equalsIgnoreCase("Delete Books")) {
+    					if(statement.executeUpdate("Delete from bookData where book_id=" + id) == 1) {
+    						alert("Success", "Book Deleted");
+    					}else {
+    						alert("Error", "Failed to Delete Book");
+    					}
+    				}else if(title.equalsIgnoreCase("Delete Users")) {
+    					if(statement.executeUpdate("Delete from users where id=" + id) == 1) {
+    						alert("Success", "User Deleted");
+    					}else {
+    						alert("Error", "Failed to Delete User");
+    					}
+    				}else if(title.equalsIgnoreCase("Return Book")) {
+    					AdminOperations.returnBook(id,AdminOperations.dataFrame);
+    				}
+					
+    			} catch (Exception e1) {
+    				e1.printStackTrace();
+    			}
+			}
+		});
+		
+		noButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//System.out.println("Clicked No Button");
+				AdminOperations.dataFrame.setVisible(false);
+				AdminOperations.dataFrame.dispose();
+				optionFrame.setVisible(false);
+				optionFrame.dispose();
+				if(title.equalsIgnoreCase("Delete Books")) {
+					processedID = "";
+					AdminOperations.deleteBooks();
+				} else if(title.equalsIgnoreCase("Delete Users")) {
+					processedID = "";
+					AdminOperations.deleteUsers();
+				} else if(title.equalsIgnoreCase("Return Book")) {
+					processedID = "";
+					AdminOperations.returnBook(id, AdminOperations.dataFrame);
+				}
+				
+			}
+		});
+		
 	}
 
 }
