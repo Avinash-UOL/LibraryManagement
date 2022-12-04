@@ -36,21 +36,21 @@ public class AdminOperations {
 	public static JTextField userInput;
 	public static JPasswordField userPassword, userConfirmPassword;
 	public static JButton addUserButton;
+	
+	//Issue Book
+	public static JFrame issueBookFrame;
+	public static JTextField issueIDInput, issueRollInput, issueNameInput, issueDateInput;
+	public static JButton issueButton;
 
 	public static void makeATableBoii(String[][] data, String[] cols, String title) {
 		
-		//JTable bookData = new JTable();
 		tableData = new JTable(data, cols);
 		JScrollPane scrollPane = new JScrollPane();
 		dataFrame = new JFrame();
-		
-		//bookData = new JTable(data, cols);
 		scrollPane = new JScrollPane(tableData);
 		tableData.setFont(new Font("Arial", Font.BOLD, 16));
 		tableData.setRowHeight(30);
 		scrollPane.setBounds(0, 0, 800, 700);
-		//Library.newFrame(title, 800, 700);
-		//Library.frame.add(scrollPane);
 		dataFrame.setTitle(title);
 		dataFrame.setSize(800, 700);
 		dataFrame.setLocationRelativeTo(null);
@@ -72,48 +72,6 @@ public class AdminOperations {
 			            GeneralOperations.confirmation("Return Book","Are you sure you want to return this book ? ",id);
 			        }
 	            }
-	            /*if(title.equalsIgnoreCase("Delete Books") || title.equalsIgnoreCase("Delete Users")) {
-	            	//int n = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete ? ");
-	        		//if (n == JOptionPane.YES_OPTION) {
-	            	GeneralOperations.confirmation("Delete","Are you sure you want to delete ?");
-	            	if(GeneralOperations.confirmation("Are you sure you want to delete ?")) {
-	        			Connection connection = MySQLDriver.connect("root", "");
-	        			try {
-	        				Statement statement = connection.createStatement();
-	        				if(title.equalsIgnoreCase("Delete Books")) {
-	        					if(statement.executeUpdate("Delete from bookData where book_id=" + id) == 1) {
-	        						//System.out.println("Record Deleted");
-	        						//JOptionPane.showMessageDialog(null, "Record Deleted", "Success", JOptionPane.INFORMATION_MESSAGE);
-	        						GeneralOperations.alert("Success", "Record Deleted");
-	        						dataFrame.setVisible(false);
-	        						deleteBooks();
-	        					}else {
-	        						//JOptionPane.showMessageDialog(null, "Failed to Delete", "Failed", JOptionPane.INFORMATION_MESSAGE);
-	        						//System.out.println("Delete Failed");
-	        						GeneralOperations.alert("Error", "Failed to Delete");
-	        					}
-	        				}else if(title.equalsIgnoreCase("Delete Users")) {
-	        					if(statement.executeUpdate("Delete from users where id=" + id) == 1) {
-	        						//System.out.println("Record Deleted");
-	        						JOptionPane.showMessageDialog(null, "Record Deleted", "Success", JOptionPane.INFORMATION_MESSAGE);
-	        						dataFrame.setVisible(false);
-	        						deleteUsers();
-	        					}else {
-	        						JOptionPane.showMessageDialog(null, "Failed to Delete", "Failed", JOptionPane.INFORMATION_MESSAGE);
-	        						//System.out.println("Delete Failed");
-	        					}
-	        				}
-	    					
-	        			} catch (Exception e) {
-	        				e.printStackTrace();
-	        			}
-	        		}
-	            }else if(title.equalsIgnoreCase("Return Book")) {
-	            	int n = JOptionPane.showConfirmDialog(null, "Are you sure you want to return this book ? ");
-	        		if (n == JOptionPane.YES_OPTION) {
-	        			returnBook(id,dataFrame);
-	        		}
-	            }*/
 	        }
 	    });
 		
@@ -457,88 +415,103 @@ public class AdminOperations {
 	}
 
 	public static void issueBook() {
-		JFrame issueFrame;
-		issueFrame = Library.newJframeWindow("Issue Book", 600, 400, JFrame.DISPOSE_ON_CLOSE);
+		issueBookFrame = Library.newJframeWindow("Issue Book", 600, 400, JFrame.DISPOSE_ON_CLOSE);
 		JLabel id, Uroll, Uname, iDate;
-		JTextField idIN = null, UrollIN = null, UnameIN = null, idateIN = null;
-		JButton issue = new JButton("Issue Book");
-		issueFrame.add(issue);
-		issue.setBounds(20, 300, 120, 30);
+		//JTextField idIN = null, UrollIN = null, UnameIN = null, idateIN = null;
+		//JButton issue = new JButton("Issue Book");
+		issueButton = new JButton("Issue Book");
+		issueBookFrame.add(issueButton);
+		issueButton.setBounds(20, 300, 120, 30);
 
 		id = new JLabel("Book Id");
 		Uroll = new JLabel("Student Roll No");
 		Uname = new JLabel("Issuer Name");
 		iDate = new JLabel("Date of issue");
 
-		JLabel[] lables = { id, Uroll, iDate };
-		String[] lableINPUT = new String[lables.length];
-		JTextField[] inputs = { idIN, UrollIN, idateIN };
+		JLabel[] lables = { id, Uroll, Uname, iDate };
+		//String[] lableINPUT = new String[lables.length];
+		//JTextField[] inputs = { idIN, UrollIN, idateIN };
 
-		for (int i = 0; i < inputs.length; i++) {
-			inputs[i] = new JTextField();
-			issueFrame.add(inputs[i]);
-		}
+		//for (int i = 0; i < inputs.length; i++) {
+		//	inputs[i] = new JTextField();
+		//	issueBookFrame.add(inputs[i]);
+		//}
+		issueIDInput = new JTextField();
+		issueRollInput = new JTextField();
+		issueNameInput = new JTextField();
+		issueDateInput = new JTextField();
+		issueBookFrame.add(issueIDInput);
+		issueBookFrame.add(issueRollInput);
+		issueBookFrame.add(issueNameInput);
+		issueBookFrame.add(issueDateInput);
 
 		int yoff = 0;
 		for (int i = 0; i < lables.length; i++) {
 			lables[i].setBounds(20, 40 + yoff, 120, 20);
-			issueFrame.add(lables[i]);
-			inputs[i].setBounds(150, 40 + yoff, 320, 40);
-			inputs[i].setFont(new Font("Arial",Font.PLAIN,20));
+			issueBookFrame.add(lables[i]);
+			//inputs[i].setBounds(150, 40 + yoff, 320, 40);
+			//inputs[i].setFont(new Font("Arial",Font.PLAIN,20));
 			yoff += 60;
 		}
 		
-		inputs[inputs.length - 1].setText(new java.sql.Date(date.getTime()).toString());
-		inputs[inputs.length - 1].setEditable(false); 
+		issueIDInput.setBounds(150,40,320,40);
+		issueIDInput.setFont(new Font("Arial",Font.PLAIN,20));
+		issueRollInput.setBounds(150,100,320,40);
+		issueRollInput.setFont(new Font("Arial",Font.PLAIN,20));
+		issueNameInput.setBounds(150,160,320,40);
+		issueNameInput.setFont(new Font("Arial",Font.PLAIN,20));
+		issueDateInput.setBounds(150,220,320,40);
+		issueDateInput.setFont(new Font("Arial",Font.PLAIN,20));
 		
-		issueFrame.setVisible(true);
+		issueDateInput.setText(new java.sql.Date(date.getTime()).toString());
+		issueDateInput.setEditable(false); 
+		
+		issueBookFrame.setVisible(true);
 
-		issue.addActionListener(new ActionListener() {
+		issueButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
 				Connection connection = MySQLDriver.connect("root", "");
-				for (int i = 0; i < inputs.length; i++)
-					lableINPUT[i] = inputs[i].getText();
+				//for (int i = 0; i < inputs.length; i++)
+				//	lableINPUT[i] = inputs[i].getText();
 
 				try {
-					if(lableINPUT[1].isEmpty() || lableINPUT[0].isEmpty()) {
-						JOptionPane.showMessageDialog(null, "Please don't leave any field blank", "Error",
-								JOptionPane.ERROR_MESSAGE);
+					if(issueIDInput.getText().isEmpty() || issueRollInput.getText().isEmpty()) {
+						//JOptionPane.showMessageDialog(null, "Please don't leave any field blank", "Error",JOptionPane.ERROR_MESSAGE);
+						GeneralOperations.alert("Error", "Please don't leave any field blank");
 					}else {
 						Statement statement = connection.createStatement();	
-						ResultSet set1 = statement.executeQuery("Select * from students where roll_number=" + lableINPUT[1]);
+						ResultSet set1 = statement.executeQuery("Select * from students where roll_number='" + issueRollInput.getText() + "'");
 						String studName = "";
 						if(set1.next() == false) {
-							JOptionPane.showMessageDialog(null, "Student record not found. Please enroll this student", "Error",
-									JOptionPane.ERROR_MESSAGE);
-							
+							//JOptionPane.showMessageDialog(null, "Student record not found. Please enroll this student", "Error",JOptionPane.ERROR_MESSAGE);
+							GeneralOperations.alert("Error", "Student record not found. Please enroll this student");
 						}else {
 							studName = set1.getString("student_name");
-							ResultSet set2 = statement.executeQuery("Select * from bookData where book_id=" + lableINPUT[0]);
+							ResultSet set2 = statement.executeQuery("Select * from bookData where book_id='" + issueIDInput.getText() +"'");
 
 							if (set2.next() == false) {
-								JOptionPane.showMessageDialog(null, "No book found as per given data", "Error",
-										JOptionPane.ERROR_MESSAGE);
+								//JOptionPane.showMessageDialog(null, "No book found as per given data", "Error", JOptionPane.ERROR_MESSAGE);
+								GeneralOperations.alert("Error", "No book found as per given data");
 							} else {
 								String Bname = set2.getString("Name");
 								int issue = set2.getInt("Issued");
 								if(issue != 0) {
-									JOptionPane.showMessageDialog(null, "Book not available. Already issued.", "Error",
-											JOptionPane.ERROR_MESSAGE);
+									//JOptionPane.showMessageDialog(null, "Book not available. Already issued.", "Error",JOptionPane.ERROR_MESSAGE);
+									GeneralOperations.alert("Error", "Book not available. Already issued.");
 								}else {
 									MySQLDriver.insertToTable(connection,
 											"insert into issuedBookData(book_id,book_name,issuer_roll_no,issuer_name,issue_date) values('"
-													+ lableINPUT[0] + "','" + Bname + "','" + lableINPUT[1] + "','" + studName
-													+ "','" + lableINPUT[2] + "')");
-									JOptionPane.showMessageDialog(null, "Book Issued To user");
+													+ issueIDInput.getText() + "','" + Bname + "','" + issueRollInput.getText() + "','" + studName
+													+ "','" + issueDateInput.getText() + "')");
+									//JOptionPane.showMessageDialog(null, "Book Issued To user");
+									GeneralOperations.alert("Success", "Book issued to user");
 									issue = 1;
-									MySQLDriver.insertToTable(connection,
-											"update bookData set issued =" + issue + " where book_id=" + lableINPUT[0]);
-									System.out.println(
-											"insert into bookData(issued) values(" + issue + ") where book_id=" + lableINPUT[0]);
-									issueFrame.setVisible(false);
+									MySQLDriver.insertToTable(connection, "update bookData set issued ='" + issue + "' where book_id='" + issueIDInput.getText() + "'");
+									//System.out.println("insert into bookData(issued) values(" + issue + ") where book_id=" + lableINPUT[0]);
+									issueBookFrame.setVisible(false);
 								}
 							}
 						}
@@ -547,7 +520,6 @@ public class AdminOperations {
 						statement.close();
 					}
 				} catch (SQLException e1) {
-
 					e1.printStackTrace();
 				}
 			}
@@ -565,13 +537,6 @@ public class AdminOperations {
 		Uname = new JLabel("Student Name : ");
 
 		JLabel[] lables = { Uroll, Uname };
-		//String[] lableINPUT = new String[lables.length];
-		//JTextField[] inputs = { enrollStudentRoll, enrollStudentName };
-
-		//for (int i = 0; i < inputs.length; i++) {
-		//	inputs[i] = new JTextField();
-		//	enrollStudent.add(inputs[i]);
-		//}
 		enrollStudentRoll = new JTextField();
 		enrollStudentName = new JTextField();
 		enrollStudent.add(enrollStudentRoll);
