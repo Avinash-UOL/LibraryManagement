@@ -205,7 +205,115 @@ public class AdminOperationsTest {
 		GeneralOperations.noButton.doClick();
     }
 	
+	@Test 
+    public void testIssueBookWithBlankData(){  
+		validLogin();
+		AdminPanel.buttons[2].doClick();
+		assertEquals("Issue Book",AdminOperations.issueBookFrame.getTitle());
+		AdminOperations.issueButton.doClick();
+		assertEquals("Please don't leave any field blank", GeneralOperations.message.getText());
+		GeneralOperations.okButton.doClick();
+    }
 	
+	@Test 
+    public void testIssueBookWithInvalidStudent(){  
+		validLogin();
+		AdminPanel.buttons[2].doClick();
+		assertEquals("Issue Book",AdminOperations.issueBookFrame.getTitle());
+		AdminOperations.issueIDInput.setText("4");
+		AdminOperations.issueRollInput.setText("50FEFEF");
+		AdminOperations.issueNameInput.setText("Tester");
+		AdminOperations.issueButton.doClick();
+		assertEquals("Student record not found. Please enroll this student", GeneralOperations.message.getText());
+		GeneralOperations.okButton.doClick();
+    }
+	
+	@Test 
+    public void testIssueBookWithInvalidBook(){  
+		validLogin();
+		AdminPanel.buttons[2].doClick();
+		assertEquals("Issue Book",AdminOperations.issueBookFrame.getTitle());
+		AdminOperations.issueIDInput.setText("111FE11");
+		AdminOperations.issueRollInput.setText("123");
+		AdminOperations.issueNameInput.setText("Tester");
+		AdminOperations.issueButton.doClick();
+		assertEquals("No book found as per given data", GeneralOperations.message.getText());
+		GeneralOperations.okButton.doClick();
+    }
+	
+	@Test 
+    public void testIssueBookWithAlreadyIssuedBook(){  
+		validLogin();
+		AdminPanel.buttons[2].doClick();
+		assertEquals("Issue Book",AdminOperations.issueBookFrame.getTitle());
+		String issuedBook = GeneralOperations.getIssuedBook();
+		String sampleStudent = GeneralOperations.getValidStudentRollNumber();
+		AdminOperations.issueIDInput.setText(issuedBook);
+		AdminOperations.issueRollInput.setText(sampleStudent);
+		AdminOperations.issueNameInput.setText("Tester");
+		AdminOperations.issueButton.doClick();
+		assertEquals("Book not available. Already issued.",GeneralOperations.message.getText());
+		GeneralOperations.okButton.doClick();
+    }
+	
+	@Test 
+    public void testIssueBookWithValidData(){  
+		validLogin();
+		AdminPanel.buttons[2].doClick();
+		assertEquals("Issue Book",AdminOperations.issueBookFrame.getTitle());
+		String availableBook = GeneralOperations.getAvailableBook();
+		String sampleStudent = GeneralOperations.getValidStudentRollNumber();
+		AdminOperations.issueIDInput.setText(availableBook);
+		AdminOperations.issueRollInput.setText(sampleStudent);
+		AdminOperations.issueNameInput.setText("Tester");
+		AdminOperations.issueButton.doClick();
+		assertEquals("Book issued to user",GeneralOperations.message.getText());
+		GeneralOperations.okButton.doClick();
+    }
+	
+	@Test 
+    public void testReturnBook(){  
+		validLogin();
+		AdminPanel.buttons[3].doClick();
+		assertEquals("Return Book",AdminOperations.dataFrame.getTitle());
+		String issueBook = GeneralOperations.getIssuedBook();
+		int rowData = AdminOperations.tableData.getRowCount();
+		AdminOperations.tableData.setRowSelectionInterval(rowData - 1, rowData - 1);
+		GeneralOperations.yesButton.doClick();
+		assertEquals("Return Book",AdminOperations.returnBookFrame.getTitle());
+		AdminOperations.returnButton.doClick();
+		assertEquals("Book returned",GeneralOperations.message.getText());
+		GeneralOperations.okButton.doClick();
+    }
+	
+	@Test 
+    public void testViewIssuedBooks(){  
+		validLogin();
+		AdminPanel.buttons[4].doClick();
+		assertEquals("Book Shelf",AdminOperations.dataFrame.getTitle());
+    }
+	
+	@Test 
+    public void testViewReturnedBooks(){  
+		validLogin();
+		AdminPanel.buttons[7].doClick();
+		assertEquals("Returned Books",AdminOperations.dataFrame.getTitle());
+    }
+	
+	@Test 
+    public void testLogout(){  
+		validLogin();
+		assertEquals("Admin Functions",AdminPanel.adminFrame.getTitle());
+		AdminPanel.buttons[10].doClick();
+		assertEquals("Logout",GeneralOperations.optionFrame.getTitle());
+		GeneralOperations.noButton.doClick();
+		assertEquals("Admin Functions",AdminPanel.adminFrame.getTitle());
+		AdminPanel.buttons[10].doClick();
+		assertEquals("Logout",GeneralOperations.optionFrame.getTitle());
+		GeneralOperations.yesButton.doClick();
+		assertEquals("Welcome to the Library",Library.frame.getTitle());
+		
+    }
 	
 	public void validLogin() {
 		Library.main(null);
@@ -213,6 +321,7 @@ public class AdminOperationsTest {
 		Library.userInN.setText("admin");
 		Library.userInP.setText("admin");
 		Library.login.doClick();
-	}	
+	}
+	
 
 }

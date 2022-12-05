@@ -36,21 +36,25 @@ public class AdminOperations {
 	public static JTextField userInput;
 	public static JPasswordField userPassword, userConfirmPassword;
 	public static JButton addUserButton;
+	
+	//Issue Book
+	public static JFrame issueBookFrame;
+	public static JTextField issueIDInput, issueRollInput, issueNameInput, issueDateInput;
+	public static JButton issueButton;
+	
+	//Return Book
+	public static JFrame returnBookFrame;
+	public static JTextField returnBookIDInput, returnBookNameInput, returnDateInput, returnStudentRollInput, returnIssuerName, returnIssueDate;
+	public static JButton returnButton;
 
 	public static void makeATableBoii(String[][] data, String[] cols, String title) {
-		
-		//JTable bookData = new JTable();
 		tableData = new JTable(data, cols);
 		JScrollPane scrollPane = new JScrollPane();
 		dataFrame = new JFrame();
-		
-		//bookData = new JTable(data, cols);
 		scrollPane = new JScrollPane(tableData);
 		tableData.setFont(new Font("Arial", Font.BOLD, 16));
 		tableData.setRowHeight(30);
 		scrollPane.setBounds(0, 0, 800, 700);
-		//Library.newFrame(title, 800, 700);
-		//Library.frame.add(scrollPane);
 		dataFrame.setTitle(title);
 		dataFrame.setSize(800, 700);
 		dataFrame.setLocationRelativeTo(null);
@@ -58,8 +62,7 @@ public class AdminOperations {
 		dataFrame.add(scrollPane);
 		dataFrame.setVisible(true);
 		
-		tableData.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
-			
+		tableData.getSelectionModel().addListSelectionListener(new ListSelectionListener(){		
 			@Override
 	        public void valueChanged(ListSelectionEvent event) {
 	            String id = tableData.getValueAt(tableData.getSelectedRow(), 0).toString();
@@ -72,51 +75,8 @@ public class AdminOperations {
 			            GeneralOperations.confirmation("Return Book","Are you sure you want to return this book ? ",id);
 			        }
 	            }
-	            /*if(title.equalsIgnoreCase("Delete Books") || title.equalsIgnoreCase("Delete Users")) {
-	            	//int n = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete ? ");
-	        		//if (n == JOptionPane.YES_OPTION) {
-	            	GeneralOperations.confirmation("Delete","Are you sure you want to delete ?");
-	            	if(GeneralOperations.confirmation("Are you sure you want to delete ?")) {
-	        			Connection connection = MySQLDriver.connect("root", "");
-	        			try {
-	        				Statement statement = connection.createStatement();
-	        				if(title.equalsIgnoreCase("Delete Books")) {
-	        					if(statement.executeUpdate("Delete from bookData where book_id=" + id) == 1) {
-	        						//System.out.println("Record Deleted");
-	        						//JOptionPane.showMessageDialog(null, "Record Deleted", "Success", JOptionPane.INFORMATION_MESSAGE);
-	        						GeneralOperations.alert("Success", "Record Deleted");
-	        						dataFrame.setVisible(false);
-	        						deleteBooks();
-	        					}else {
-	        						//JOptionPane.showMessageDialog(null, "Failed to Delete", "Failed", JOptionPane.INFORMATION_MESSAGE);
-	        						//System.out.println("Delete Failed");
-	        						GeneralOperations.alert("Error", "Failed to Delete");
-	        					}
-	        				}else if(title.equalsIgnoreCase("Delete Users")) {
-	        					if(statement.executeUpdate("Delete from users where id=" + id) == 1) {
-	        						//System.out.println("Record Deleted");
-	        						JOptionPane.showMessageDialog(null, "Record Deleted", "Success", JOptionPane.INFORMATION_MESSAGE);
-	        						dataFrame.setVisible(false);
-	        						deleteUsers();
-	        					}else {
-	        						JOptionPane.showMessageDialog(null, "Failed to Delete", "Failed", JOptionPane.INFORMATION_MESSAGE);
-	        						//System.out.println("Delete Failed");
-	        					}
-	        				}
-	    					
-	        			} catch (Exception e) {
-	        				e.printStackTrace();
-	        			}
-	        		}
-	            }else if(title.equalsIgnoreCase("Return Book")) {
-	            	int n = JOptionPane.showConfirmDialog(null, "Are you sure you want to return this book ? ");
-	        		if (n == JOptionPane.YES_OPTION) {
-	        			returnBook(id,dataFrame);
-	        		}
-	            }*/
 	        }
-	    });
-		
+	    });	
 	}
 
 	public static void addBook() {
@@ -132,8 +92,6 @@ public class AdminOperations {
 		price = new JLabel("Enter Book's Price (£)");
 
 		JLabel[] lables = { name, auth, gen, price };
-		//String[] lableINPUT = new String[lables.length];
-		//JTextField[] inputs = { nameIN, authIN, genIN, priceIN };
 		bookNameInput = new JTextField();
 		bookAuthorInput = new JTextField();
 		bookGenereInput = new JTextField();
@@ -143,17 +101,11 @@ public class AdminOperations {
 		addFrame.add(bookAuthorInput);
 		addFrame.add(bookGenereInput);
 		addFrame.add(bookPriceInput);
-		//for (int i = 0; i < inputs.length; i++) {
-		//	inputs[i] = new JTextField();
-		//	addFrame.add(inputs[i]);
-		//}
 
 		int yoff = 0;
 		for (int i = 0; i < lables.length; i++) {
 			lables[i].setBounds(20, 40 + yoff, 180, 20);
 			addFrame.add(lables[i]);
-			//inputs[i].setBounds(150, 40 + yoff, 400, 40);
-			//inputs[i].setFont(new Font("Arial",Font.PLAIN,20));
 			yoff += 60;
 		}
 		
@@ -172,15 +124,10 @@ public class AdminOperations {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//lableINPUT[0] = inputs[0].getText();
-				//lableINPUT[1] = inputs[1].getText();
-				//lableINPUT[2] = inputs[2].getText();
-				//lableINPUT[3] = inputs[3].getText();
 				boolean allow = true;
 				for (int i = 0; i < 4; i++) {
 					if (bookNameInput.getText().isEmpty() || bookAuthorInput.getText().isEmpty() || bookGenereInput.getText().isEmpty() || bookPriceInput.getText().isEmpty()) {
 						allow = false;
-						//JOptionPane.showMessageDialog(null, "Please don't leave any field blank", "Error", JOptionPane.ERROR_MESSAGE);
 						GeneralOperations.alert("Error", "Please don't leave any field blank");
 						break;
 					}
@@ -192,7 +139,6 @@ public class AdminOperations {
 					}
 				}catch(NumberFormatException numExep) {
 					allow = false;
-					//JOptionPane.showMessageDialog(null, "Please enter numeric value for price", "Error", JOptionPane.ERROR_MESSAGE);
 					GeneralOperations.alert("Error", "Please enter numeric value for price");
 				}
 				
@@ -202,7 +148,6 @@ public class AdminOperations {
 					MySQLDriver.insertToTable(connection,
 							"insert into bookData(name,author,genre,price,issued) values('" + bookNameInput.getText() + "','"
 									+ bookAuthorInput.getText() + "','" + bookGenereInput.getText() + "','" + bookPriceInput.getText() + "',0)");
-					//JOptionPane.showMessageDialog(null, "Book added to database", "Success", JOptionPane.INFORMATION_MESSAGE);
 					GeneralOperations.alert("Success", "Book added to database");
 					addFrame.setVisible(false);
 					try {
@@ -259,18 +204,7 @@ public class AdminOperations {
 	}
 
 	public static void logout() {
-		int n = JOptionPane.showConfirmDialog(null, "Do you want to logout");
-		if (n == JOptionPane.YES_OPTION) {
-			//Library.frame.dispose();
-			//Library.frame.setVisible(false);
-			try {
-				Library.mainMenu();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
+		GeneralOperations.confirmation("Logout", "Do you want to logout ?", "");
 	}
 
 	public static void showBooks() {
@@ -457,88 +391,85 @@ public class AdminOperations {
 	}
 
 	public static void issueBook() {
-		JFrame issueFrame;
-		issueFrame = Library.newJframeWindow("Issue Book", 600, 400, JFrame.DISPOSE_ON_CLOSE);
+		issueBookFrame = Library.newJframeWindow("Issue Book", 600, 400, JFrame.DISPOSE_ON_CLOSE);
 		JLabel id, Uroll, Uname, iDate;
-		JTextField idIN = null, UrollIN = null, UnameIN = null, idateIN = null;
-		JButton issue = new JButton("Issue Book");
-		issueFrame.add(issue);
-		issue.setBounds(20, 300, 120, 30);
+		issueButton = new JButton("Issue Book");
+		issueBookFrame.add(issueButton);
+		issueButton.setBounds(20, 300, 120, 30);
 
 		id = new JLabel("Book Id");
 		Uroll = new JLabel("Student Roll No");
 		Uname = new JLabel("Issuer Name");
 		iDate = new JLabel("Date of issue");
 
-		JLabel[] lables = { id, Uroll, iDate };
-		String[] lableINPUT = new String[lables.length];
-		JTextField[] inputs = { idIN, UrollIN, idateIN };
-
-		for (int i = 0; i < inputs.length; i++) {
-			inputs[i] = new JTextField();
-			issueFrame.add(inputs[i]);
-		}
+		JLabel[] lables = { id, Uroll, Uname, iDate };
+		issueIDInput = new JTextField();
+		issueRollInput = new JTextField();
+		issueNameInput = new JTextField();
+		issueDateInput = new JTextField();
+		issueBookFrame.add(issueIDInput);
+		issueBookFrame.add(issueRollInput);
+		issueBookFrame.add(issueNameInput);
+		issueBookFrame.add(issueDateInput);
 
 		int yoff = 0;
 		for (int i = 0; i < lables.length; i++) {
 			lables[i].setBounds(20, 40 + yoff, 120, 20);
-			issueFrame.add(lables[i]);
-			inputs[i].setBounds(150, 40 + yoff, 320, 40);
-			inputs[i].setFont(new Font("Arial",Font.PLAIN,20));
+			issueBookFrame.add(lables[i]);
 			yoff += 60;
 		}
 		
-		inputs[inputs.length - 1].setText(new java.sql.Date(date.getTime()).toString());
-		inputs[inputs.length - 1].setEditable(false); 
+		issueIDInput.setBounds(150,40,320,40);
+		issueIDInput.setFont(new Font("Arial",Font.PLAIN,20));
+		issueRollInput.setBounds(150,100,320,40);
+		issueRollInput.setFont(new Font("Arial",Font.PLAIN,20));
+		issueNameInput.setBounds(150,160,320,40);
+		issueNameInput.setFont(new Font("Arial",Font.PLAIN,20));
+		issueDateInput.setBounds(150,220,320,40);
+		issueDateInput.setFont(new Font("Arial",Font.PLAIN,20));
 		
-		issueFrame.setVisible(true);
+		issueDateInput.setText(new java.sql.Date(date.getTime()).toString());
+		issueDateInput.setEditable(false); 
+		
+		issueBookFrame.setVisible(true);
 
-		issue.addActionListener(new ActionListener() {
+		issueButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
 				Connection connection = MySQLDriver.connect("root", "");
-				for (int i = 0; i < inputs.length; i++)
-					lableINPUT[i] = inputs[i].getText();
 
 				try {
-					if(lableINPUT[1].isEmpty() || lableINPUT[0].isEmpty()) {
-						JOptionPane.showMessageDialog(null, "Please don't leave any field blank", "Error",
-								JOptionPane.ERROR_MESSAGE);
+					if(issueIDInput.getText().isEmpty() || issueRollInput.getText().isEmpty()) {
+						GeneralOperations.alert("Error", "Please don't leave any field blank");
 					}else {
 						Statement statement = connection.createStatement();	
-						ResultSet set1 = statement.executeQuery("Select * from students where roll_number=" + lableINPUT[1]);
+						ResultSet set1 = statement.executeQuery("Select * from students where roll_number='" + issueRollInput.getText() + "'");
 						String studName = "";
 						if(set1.next() == false) {
-							JOptionPane.showMessageDialog(null, "Student record not found. Please enroll this student", "Error",
-									JOptionPane.ERROR_MESSAGE);
-							
+							GeneralOperations.alert("Error", "Student record not found. Please enroll this student");
 						}else {
 							studName = set1.getString("student_name");
-							ResultSet set2 = statement.executeQuery("Select * from bookData where book_id=" + lableINPUT[0]);
+							ResultSet set2 = statement.executeQuery("Select * from bookData where book_id='" + issueIDInput.getText() +"'");
 
 							if (set2.next() == false) {
-								JOptionPane.showMessageDialog(null, "No book found as per given data", "Error",
-										JOptionPane.ERROR_MESSAGE);
+								GeneralOperations.alert("Error", "No book found as per given data");
 							} else {
 								String Bname = set2.getString("Name");
 								int issue = set2.getInt("Issued");
 								if(issue != 0) {
-									JOptionPane.showMessageDialog(null, "Book not available. Already issued.", "Error",
-											JOptionPane.ERROR_MESSAGE);
+									GeneralOperations.alert("Error", "Book not available. Already issued.");
 								}else {
 									MySQLDriver.insertToTable(connection,
 											"insert into issuedBookData(book_id,book_name,issuer_roll_no,issuer_name,issue_date) values('"
-													+ lableINPUT[0] + "','" + Bname + "','" + lableINPUT[1] + "','" + studName
-													+ "','" + lableINPUT[2] + "')");
-									JOptionPane.showMessageDialog(null, "Book Issued To user");
+													+ issueIDInput.getText() + "','" + Bname + "','" + issueRollInput.getText() + "','" + studName
+													+ "','" + issueDateInput.getText() + "')");
+									GeneralOperations.alert("Success", "Book issued to user");
 									issue = 1;
-									MySQLDriver.insertToTable(connection,
-											"update bookData set issued =" + issue + " where book_id=" + lableINPUT[0]);
-									System.out.println(
-											"insert into bookData(issued) values(" + issue + ") where book_id=" + lableINPUT[0]);
-									issueFrame.setVisible(false);
+									MySQLDriver.insertToTable(connection, "update bookData set issued ='" + issue + "' where book_id='" + issueIDInput.getText() + "'");
+									//System.out.println("insert into bookData(issued) values(" + issue + ") where book_id=" + lableINPUT[0]);
+									issueBookFrame.setVisible(false);
 								}
 							}
 						}
@@ -547,7 +478,6 @@ public class AdminOperations {
 						statement.close();
 					}
 				} catch (SQLException e1) {
-
 					e1.printStackTrace();
 				}
 			}
@@ -565,13 +495,6 @@ public class AdminOperations {
 		Uname = new JLabel("Student Name : ");
 
 		JLabel[] lables = { Uroll, Uname };
-		//String[] lableINPUT = new String[lables.length];
-		//JTextField[] inputs = { enrollStudentRoll, enrollStudentName };
-
-		//for (int i = 0; i < inputs.length; i++) {
-		//	inputs[i] = new JTextField();
-		//	enrollStudent.add(inputs[i]);
-		//}
 		enrollStudentRoll = new JTextField();
 		enrollStudentName = new JTextField();
 		enrollStudent.add(enrollStudentRoll);
@@ -595,13 +518,10 @@ public class AdminOperations {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//lableINPUT[0] = inputs[0].getText();
-				//lableINPUT[1] = inputs[1].getText();
 				boolean allow = true;
 				for (int i = 0; i < 2; i++) {
 					if (enrollStudentRoll.getText().isEmpty() || enrollStudentName.getText().isEmpty()) {
 						allow = false;
-						//JOptionPane.showMessageDialog(null, "Please don't leave any field blank", "Error", JOptionPane.ERROR_MESSAGE);
 						GeneralOperations.alert("Error","Please don't leave any field blank");
 						break;
 					}
@@ -613,7 +533,6 @@ public class AdminOperations {
 					}
 				}catch(NumberFormatException numExep) {
 					allow = false;
-					//JOptionPane.showMessageDialog(null, "Please enter numeric value for price", "Error", JOptionPane.ERROR_MESSAGE);
 					GeneralOperations.alert("Error", "Please enter numeric value for roll number");
 				}
 				
@@ -624,18 +543,14 @@ public class AdminOperations {
 						ResultSet set1 = statement.executeQuery("Select * from students where roll_number=" + enrollStudentRoll.getText());
 						String studName = "";
 						if(set1.next() == true) {
-							//JOptionPane.showMessageDialog(null, "Student already registered", "Error", JOptionPane.ERROR_MESSAGE);	
 							GeneralOperations.alert("Error","Student already registered");
 						}else {
 							MySQLDriver.insertToTable(connection, "insert into students(roll_number,student_name) values('" + enrollStudentRoll.getText() + "','" + enrollStudentName.getText() + "')");
-							//JOptionPane.showMessageDialog(null, "User Enrolled Successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
 							GeneralOperations.alert("Success", "User Enrolled Successfully");
 							enrollStudent.setVisible(false);
 						}
 						connection.close();
-						//System.out.println("Connection closed");
 					} catch (SQLException e1) {
-
 						e1.printStackTrace();
 					}
 				}
@@ -644,13 +559,11 @@ public class AdminOperations {
 	}
 
 	public static void returnBook(String bookId, JFrame dataFrame) {
-		JFrame returnFrame;
-		returnFrame = Library.newJframeWindow("Return Book", 600, 500, JFrame.DISPOSE_ON_CLOSE);
+		returnBookFrame = Library.newJframeWindow("Return Book", 600, 500, JFrame.DISPOSE_ON_CLOSE);
 		JLabel id, book_name, Uroll, issuer_name, issue_Date, rDate;
-		JTextField idIN = null, bookName = null, rdateIN = null, UrollIN = null, issuerName = null, issueDate = null;
-		JButton returnBut = new JButton("Confirm Return");
-		returnFrame.add(returnBut);
-		returnBut.setBounds(20, 400, 120, 30);
+		returnButton = new JButton("Confirm Return");
+		returnBookFrame.add(returnButton);
+		returnButton.setBounds(20, 400, 120, 30);
 
 		id = new JLabel("Book Id");
 		book_name = new JLabel("Book Name");
@@ -660,22 +573,40 @@ public class AdminOperations {
 		rDate = new JLabel("Date of return");
 
 		JLabel[] lables = { id, book_name, Uroll, issuer_name, issue_Date, rDate };
-		String[] lableINPUT = new String[lables.length];
-		JTextField[] inputs = { idIN, bookName, UrollIN, issuerName, issueDate, rdateIN };
-
-		for (int i = 0; i < inputs.length; i++) {
-			inputs[i] = new JTextField();
-			returnFrame.add(inputs[i]);
-		}
+		
+		returnBookIDInput = new JTextField();
+		returnBookNameInput = new JTextField();
+		returnStudentRollInput = new JTextField();
+		returnIssuerName = new JTextField();
+		returnIssueDate = new JTextField();
+		returnDateInput = new JTextField();
+		
+		returnBookFrame.add(returnBookIDInput);
+		returnBookFrame.add(returnBookNameInput);
+		returnBookFrame.add(returnStudentRollInput);
+		returnBookFrame.add(returnIssuerName);
+		returnBookFrame.add(returnIssueDate);
+		returnBookFrame.add(returnDateInput);
 
 		int yoff = 0;
 		for (int i = 0; i < lables.length; i++) {
 			lables[i].setBounds(20, 40 + yoff, 120, 20);
-			returnFrame.add(lables[i]);
-			inputs[i].setBounds(150, 40 + yoff, 320, 40);
-			inputs[i].setFont(new Font("Arial",Font.PLAIN,20));
+			returnBookFrame.add(lables[i]);
 			yoff += 60;
 		}
+		
+		returnBookIDInput.setBounds(150, 40, 320, 40);
+		returnBookNameInput.setBounds(150, 100, 320, 40);
+		returnStudentRollInput.setBounds(150, 160, 320, 40);
+		returnIssuerName.setBounds(150, 220, 320, 40);
+		returnIssueDate.setBounds(150, 280, 320, 40);
+		returnDateInput.setBounds(150, 340, 320, 40);
+		returnBookIDInput.setFont(new Font("Arial",Font.PLAIN,20));
+		returnBookNameInput.setFont(new Font("Arial",Font.PLAIN,20));
+		returnStudentRollInput.setFont(new Font("Arial",Font.PLAIN,20));
+		returnIssuerName.setFont(new Font("Arial",Font.PLAIN,20));
+		returnIssueDate.setFont(new Font("Arial",Font.PLAIN,20));
+		returnDateInput.setFont(new Font("Arial",Font.PLAIN,20));
 		
 		Connection connection = MySQLDriver.connect("root", "");
 		try {
@@ -696,31 +627,28 @@ public class AdminOperations {
 				String issDate = set2.getDate("issue_date").toString();
 				String retDate = new java.sql.Date(date.getTime()).toString();
 				
-				inputs[0].setText(String.valueOf(bkId));
-				inputs[0].setEditable(false);
-				inputs[1].setText(bkName);
-				inputs[1].setEditable(false);
-				inputs[2].setText(issRollNo);
-				inputs[2].setEditable(false);
-				inputs[3].setText(issName);
-				inputs[3].setEditable(false);
-				inputs[4].setText(issDate);
-				inputs[4].setEditable(false);
-				inputs[5].setText(retDate);
-				inputs[5].setEditable(false);
+				returnBookIDInput.setText(String.valueOf(bkId));
+				returnBookIDInput.setEditable(false);
+				returnBookNameInput.setText(bkName);
+				returnBookNameInput.setEditable(false);
+				returnStudentRollInput.setText(issRollNo);
+				returnStudentRollInput.setEditable(false);
+				returnIssuerName.setText(issName);
+				returnIssuerName.setEditable(false);
+				returnIssueDate.setText(issDate);
+				returnIssueDate.setEditable(false);
+				returnDateInput.setText(retDate);
+				returnDateInput.setEditable(false);
 			}
-			
-			//connection.close();
-			//System.out.println("Connection closed");
 			statement.close();
 		} catch (SQLException e1) {
 
 			e1.printStackTrace();
 		}
 		
-		returnFrame.setVisible(true);
+		returnBookFrame.setVisible(true);
 
-		returnBut.addActionListener(new ActionListener() {
+		returnButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -728,17 +656,17 @@ public class AdminOperations {
 					Statement statement = connection.createStatement();
 					MySQLDriver.insertToTable(connection,
 							"insert into returnedBookData(book_id,issuer_roll_no,issuer_name,issue_date,return_date) values('"
-									+ inputs[0].getText() + "','" + inputs[2].getText() + "','" + inputs[3].getText() + "','" + inputs[4].getText()
-									+ "','" + inputs[5].getText() + "')");
-					statement.executeUpdate("delete from issuedBookData where book_id=" + inputs[0].getText());
+									+ returnBookIDInput.getText() + "','" + returnStudentRollInput.getText() + "','" + returnIssuerName.getText() + "','" + returnIssueDate.getText()
+									+ "','" + returnDateInput.getText() + "')");
+					statement.executeUpdate("delete from issuedBookData where book_id=" + returnBookIDInput.getText());
 					int issue = 0;
 					MySQLDriver.insertToTable(connection,
-							"update bookData set issued =" + issue + " where book_id=" + inputs[0].getText());
-					JOptionPane.showMessageDialog(null, "Book returned");
+							"update bookData set issued =" + issue + " where book_id=" + returnBookIDInput.getText());
+					GeneralOperations.alert("Success", "Book returned");
 					connection.close();
 					System.out.println("Connection closed");
 					statement.close();
-					returnFrame.setVisible(false);
+					returnBookFrame.setVisible(false);
 					dataFrame.setVisible(false);
 					viewIssuedBooks("Return Book");
 				}catch(Exception e2) {
@@ -780,9 +708,7 @@ public class AdminOperations {
 				i++;
 			}
 			connection.close();
-
 			makeATableBoii(data, cols, "Returned Books");
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -826,15 +752,9 @@ public class AdminOperations {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				//String uname = userInN.getText();
-				//String upass = String.valueOf(userInP.getPassword());
-				//String cupass = String.valueOf(userConfInP.getPassword());
 				if (userInput.getText().isEmpty() || String.copyValueOf(userPassword.getPassword()).isEmpty() || String.copyValueOf(userConfirmPassword.getPassword()).isEmpty()){
-					//JOptionPane.showMessageDialog(null, "Please Provide username");
 					GeneralOperations.alert("Error", "Please don't leave any field blank");
 				} else if (!String.copyValueOf(userPassword.getPassword()).equals(String.copyValueOf(userConfirmPassword.getPassword()))) {
-					//JOptionPane.showMessageDialog(null, "Please Enter password correctly");
 					GeneralOperations.alert("Success","Please Enter password correctly");
 				} else {
 					Connection connection = MySQLDriver.connect("root", "");
@@ -843,11 +763,9 @@ public class AdminOperations {
 						ResultSet set1 = statement.executeQuery("Select * from users where username='" + userInput.getText() +"'");
 						String studName = "";
 						if(set1.next() == true) {
-							//JOptionPane.showMessageDialog(null, "Student already registered", "Error", JOptionPane.ERROR_MESSAGE);	
 							GeneralOperations.alert("Error","User already exists");
 						}else {
 							String query = "insert into users(username,password) values('" + userInput.getText() + "' , '" + String.copyValueOf(userConfirmPassword.getPassword()) + "')";
-							//JOptionPane.showMessageDialog(null,"User Added");
 							GeneralOperations.alert("Success","User Added");
 							MySQLDriver.insertToTable(connection, query);
 							addUserFrame.setVisible(false);
@@ -855,7 +773,6 @@ public class AdminOperations {
 						}
 						connection.close();
 					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					} catch (Exception e2) {
 						e2.printStackTrace();
