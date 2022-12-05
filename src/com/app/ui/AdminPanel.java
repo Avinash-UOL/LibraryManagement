@@ -47,12 +47,6 @@ public class AdminPanel {
 		adminFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		adminFrame.add(label);
 		
-		//Library.frame.add(label);
-		//Library.frame.setTitle("Admin Functions");
-		//Library.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		
-		//JButton ResetInc = new JButton();
 		int xoff = 0, yoff = 0;
 
 		for (int i = 0; i < buttons.length; i++) {
@@ -60,20 +54,12 @@ public class AdminPanel {
 				buttons[i] = new JButton();
 				Image dimg = ImageIO.read(Library.class.getResourceAsStream("/logout.png")).getScaledInstance(50, 50,Image.SCALE_SMOOTH);
 				buttons[i].setIcon(new ImageIcon(dimg));
-				// ResetInc.setIcon(new ImageIcon(
-				// "C:\\Users\\Dell\\eclipse-workspace\\LibManagement\\src\\resources\\refresh.png"));
-				//LibMain.frame.add(ResetInc);
-				// ResetInc.setBounds(700, 60, 50, 54);
-
-				//Library.frame.add(buttons[i]);
 				buttons[i].setBounds(1120, 10, 50, 50);
 				adminFrame.add(buttons[i]);
 				
 				break;
 			}
 			buttons[i] = new JButton(names[i]);
-			//Library.frame.add(buttons[i]);
-			//adminFrame.add(buttons[i]);
 			buttons[i].setBounds(130 + xoff, 190 + yoff, 180, 45);
 			buttons[i].setFont(new Font("Arial", Font.BOLD, 16));
 			if (xoff >= 630) {
@@ -136,15 +122,13 @@ public class AdminPanel {
 					} else if (j == 9) {
 						AdminOperations.deleteBooks();
 					} else if (j == 10) {
-						//AdminOperations.logout();
-						int n = JOptionPane.showConfirmDialog(null, "Do you want to logout");
+						int n = JOptionPane.showConfirmDialog(null, "Do you want to logout ?");
 						if (n == JOptionPane.YES_OPTION) {
 							adminFrame.dispose();
 							adminFrame.setVisible(false);
 							try {
 								Library.mainMenu();
 							} catch (Exception e1) {
-								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
 						}

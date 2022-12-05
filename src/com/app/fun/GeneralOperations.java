@@ -148,5 +148,60 @@ public class GeneralOperations {
 		});
 		
 	}
+	
+	public static String getIssuedBook() {
+		String issuedBookID = "";
+		Connection connection = MySQLDriver.connect("root", "");
+		try {
+			Statement statement = connection.createStatement();	
+			ResultSet set1 = statement.executeQuery("Select * from bookData where issued='1' LIMIT 1");
+			if(set1.next() == false) {
+				System.out.println("No Record Found");
+			} else {
+				issuedBookID = String.valueOf(set1.getInt("book_id"));
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	
+		return issuedBookID;
+	}
+	
+	public static String getAvailableBook() {
+		String availableBookID = "";
+		Connection connection = MySQLDriver.connect("root", "");
+		try {
+			Statement statement = connection.createStatement();	
+			ResultSet set1 = statement.executeQuery("Select * from bookData where issued='0' LIMIT 1");
+			if(set1.next() == false) {
+				System.out.println("No Record Found");
+			} else {
+				availableBookID = String.valueOf(set1.getInt("book_id"));
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	
+		return availableBookID;
+	}
+	
+	public static String getValidStudentRollNumber() {
+		String availableStudent = "";
+		Connection connection = MySQLDriver.connect("root", "");
+		try {
+			Statement statement = connection.createStatement();	
+			ResultSet set1 = statement.executeQuery("Select * from students LIMIT 1");
+			if(set1.next() == false) {
+				System.out.println("No Record Found");
+			} else {
+				availableStudent = String.valueOf(set1.getInt("roll_number"));
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	
+		return availableStudent;
+	}
+	
 
 }

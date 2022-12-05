@@ -241,6 +241,72 @@ public class AdminOperationsTest {
 		GeneralOperations.okButton.doClick();
     }
 	
+	@Test 
+    public void testIssueBookWithAlreadyIssuedBook(){  
+		validLogin();
+		AdminPanel.buttons[2].doClick();
+		assertEquals("Issue Book",AdminOperations.issueBookFrame.getTitle());
+		String issuedBook = GeneralOperations.getIssuedBook();
+		String sampleStudent = GeneralOperations.getValidStudentRollNumber();
+		AdminOperations.issueIDInput.setText(issuedBook);
+		AdminOperations.issueRollInput.setText(sampleStudent);
+		AdminOperations.issueNameInput.setText("Tester");
+		AdminOperations.issueButton.doClick();
+		assertEquals("Book not available. Already issued.",GeneralOperations.message.getText());
+		GeneralOperations.okButton.doClick();
+    }
+	
+	@Test 
+    public void testIssueBookWithValidData(){  
+		validLogin();
+		AdminPanel.buttons[2].doClick();
+		assertEquals("Issue Book",AdminOperations.issueBookFrame.getTitle());
+		String availableBook = GeneralOperations.getAvailableBook();
+		String sampleStudent = GeneralOperations.getValidStudentRollNumber();
+		AdminOperations.issueIDInput.setText(availableBook);
+		AdminOperations.issueRollInput.setText(sampleStudent);
+		AdminOperations.issueNameInput.setText("Tester");
+		AdminOperations.issueButton.doClick();
+		assertEquals("Book issued to user",GeneralOperations.message.getText());
+		GeneralOperations.okButton.doClick();
+    }
+	
+	@Test 
+    public void testViewIssuedBooks(){  
+		validLogin();
+		AdminPanel.buttons[6].doClick();
+		//Add Assert Conditions
+    }
+	
+	@Test 
+    public void testReturnBook(){  
+		validLogin();
+		AdminPanel.buttons[3].doClick();
+		assertEquals("Return Book",AdminOperations.dataFrame.getTitle());
+		String issueBook = GeneralOperations.getIssuedBook();
+		int rowData = AdminOperations.tableData.getRowCount();
+		AdminOperations.tableData.setRowSelectionInterval(rowData - 1, rowData - 1);
+		GeneralOperations.yesButton.doClick();
+		assertEquals("Return Book",AdminOperations.returnBookFrame.getTitle());
+		AdminOperations.returnButton.doClick();
+		assertEquals("Book returned",GeneralOperations.message.getText());
+		GeneralOperations.okButton.doClick();
+    }
+	
+	@Test 
+    public void testViewReturnedBooks(){  
+		validLogin();
+		AdminPanel.buttons[7].doClick();
+		//Add Assert Conditions
+    }
+	
+	@Test 
+    public void testLogout(){  
+		validLogin();
+		AdminPanel.buttons[10].doClick();
+		//Add Assert Conditions
+    }
+	
 	public void validLogin() {
 		Library.main(null);
 		Library.login();
@@ -249,43 +315,5 @@ public class AdminOperationsTest {
 		Library.login.doClick();
 	}
 	
-	@Test 
-    public void testIssueBookWithAlreadyIssuedBook(){  
-		validLogin();
-		AdminPanel.buttons[2].doClick();
-		assertEquals("Issue Book",AdminOperations.issueBookFrame.getTitle());
-		AdminOperations.issueIDInput.setText("111FE11");
-		AdminOperations.issueRollInput.setText("123");
-		AdminOperations.issueNameInput.setText("Tester");
-		AdminOperations.issueButton.doClick();
-		assertEquals("Book not available. Already issued.", GeneralOperations.message.getText());
-		GeneralOperations.okButton.doClick();
-    }
-	
-	
-	
-	@Test 
-    public void testViewIssuedBook(){  
-		validLogin();
-		AdminPanel.buttons[6].doClick();
-    }
-	
-	@Test 
-    public void testReturnBook(){  
-		validLogin();
-		AdminPanel.buttons[3].doClick();
-    }
-	
-	@Test 
-    public void testViewReturnedBook(){  
-		validLogin();
-		AdminPanel.buttons[7].doClick();
-    }
-	
-	@Test 
-    public void testLogout(){  
-		validLogin();
-		AdminPanel.buttons[10].doClick();
-    }
 
 }
