@@ -272,13 +272,6 @@ public class AdminOperationsTest {
     }
 	
 	@Test 
-    public void testViewIssuedBooks(){  
-		validLogin();
-		AdminPanel.buttons[6].doClick();
-		//Add Assert Conditions
-    }
-	
-	@Test 
     public void testReturnBook(){  
 		validLogin();
 		AdminPanel.buttons[3].doClick();
@@ -294,17 +287,32 @@ public class AdminOperationsTest {
     }
 	
 	@Test 
+    public void testViewIssuedBooks(){  
+		validLogin();
+		AdminPanel.buttons[4].doClick();
+		assertEquals("Book Shelf",AdminOperations.dataFrame.getTitle());
+    }
+	
+	@Test 
     public void testViewReturnedBooks(){  
 		validLogin();
 		AdminPanel.buttons[7].doClick();
-		//Add Assert Conditions
+		assertEquals("Returned Books",AdminOperations.dataFrame.getTitle());
     }
 	
 	@Test 
     public void testLogout(){  
 		validLogin();
+		assertEquals("Admin Functions",AdminPanel.adminFrame.getTitle());
 		AdminPanel.buttons[10].doClick();
-		//Add Assert Conditions
+		assertEquals("Logout",GeneralOperations.optionFrame.getTitle());
+		GeneralOperations.noButton.doClick();
+		assertEquals("Admin Functions",AdminPanel.adminFrame.getTitle());
+		AdminPanel.buttons[10].doClick();
+		assertEquals("Logout",GeneralOperations.optionFrame.getTitle());
+		GeneralOperations.yesButton.doClick();
+		assertEquals("Welcome to the Library",Library.frame.getTitle());
+		
     }
 	
 	public void validLogin() {

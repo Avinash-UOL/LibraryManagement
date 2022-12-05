@@ -117,6 +117,8 @@ public class GeneralOperations {
     					}
     				}else if(title.equalsIgnoreCase("Return Book")) {
     					AdminOperations.returnBook(id,AdminOperations.dataFrame);
+    				}else if(title.equalsIgnoreCase("Logout")) {
+    					Library.mainMenu();
     				}
 					
     			} catch (Exception e1) {
@@ -142,6 +144,8 @@ public class GeneralOperations {
 				} else if(title.equalsIgnoreCase("Return Book")) {
 					processedID = "";
 					AdminOperations.returnBook(id, AdminOperations.dataFrame);
+				} else if(title.equalsIgnoreCase("Logout")) {
+					//Do Nothing
 				}
 				
 			}

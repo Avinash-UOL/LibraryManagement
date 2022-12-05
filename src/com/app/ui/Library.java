@@ -116,12 +116,11 @@ public class Library {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				String uname = userInN.getText();
 				String upass = String.valueOf(userInP.getPassword());
-				if (uname == "") {
+				if(uname == "") {
 					JOptionPane.showMessageDialog(null, "Please Enter username");
-				} else if (upass == "") {
+				} else if(upass == "") {
 					JOptionPane.showMessageDialog(null, "Please Enter password");
 				} else {
 
@@ -132,8 +131,7 @@ public class Library {
 						statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
 								ResultSet.CONCUR_UPDATABLE);
 						resultSet = statement.executeQuery(st);
-						if (resultSet.next() == false) {
-							//pane.showMessageDialog(frame, "Invalid Login Credentials", "Error", JOptionPane.ERROR_MESSAGE);
+						if(resultSet.next() == false) {
 							GeneralOperations.alert("Error","Invalid Login Credentials");
 						} else {
 							frame.dispose();
