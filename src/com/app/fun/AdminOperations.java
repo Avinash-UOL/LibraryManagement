@@ -47,6 +47,8 @@ public class AdminOperations {
 	public static JTextField returnBookIDInput, returnBookNameInput, returnDateInput, returnStudentRollInput, returnIssuerName, returnIssueDate;
 	public static JButton returnButton;
 
+	
+	//Function to display table view
 	public static void makeATableBoii(String[][] data, String[] cols, String title) {
 		tableData = new JTable(data, cols);
 		JScrollPane scrollPane = new JScrollPane();
@@ -79,6 +81,7 @@ public class AdminOperations {
 	    });	
 	}
 
+	//Function to Add Books
 	public static void addBook() {
 		addFrame = Library.newJframeWindow("Add Book", 600, 400, JFrame.DISPOSE_ON_CLOSE);
 		JLabel name, auth, gen, price;
@@ -143,7 +146,7 @@ public class AdminOperations {
 				}
 				
 				if (allow) {
-					Connection connection = MySQLDriver.connect("root", "");
+					Connection connection = MySQLDriver.connect();
 					//System.out.println("name = " + bookNameInput);
 					MySQLDriver.insertToTable(connection,
 							"insert into bookData(name,author,genre,price,issued) values('" + bookNameInput.getText() + "','"
@@ -162,9 +165,10 @@ public class AdminOperations {
 		});
 	}
 	
+	//Function to delete books
 	public static void deleteBooks() {
 
-		Connection connection = MySQLDriver.connect("root", "");
+		Connection connection = MySQLDriver.connect();
 		try {
 			Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
 					ResultSet.CONCUR_READ_ONLY);
@@ -203,13 +207,15 @@ public class AdminOperations {
 
 	}
 
+	//Function to Logout
 	public static void logout() {
 		GeneralOperations.confirmation("Logout", "Do you want to logout ?", "");
 	}
 
+	//Function to view books
 	public static void showBooks() {
 
-		Connection connection = MySQLDriver.connect("root", "");
+		Connection connection = MySQLDriver.connect();
 		try {
 			Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
 					ResultSet.CONCUR_READ_ONLY);
@@ -248,9 +254,10 @@ public class AdminOperations {
 
 	}
 
+	//Function to view users
 	public static void viewUsers() {
 
-		Connection connection = MySQLDriver.connect("root", "");
+		Connection connection = MySQLDriver.connect();
 		try {
 			Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
 					ResultSet.CONCUR_READ_ONLY);
@@ -281,9 +288,10 @@ public class AdminOperations {
 
 	}
 	
+	//Function to view students
 	public static void showStudents() {
 
-		Connection connection = MySQLDriver.connect("root", "");
+		Connection connection = MySQLDriver.connect();
 		try {
 			Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
 					ResultSet.CONCUR_READ_ONLY);
@@ -317,9 +325,10 @@ public class AdminOperations {
 
 	}
 	
+	//Function to delete users
 	public static void deleteUsers() {
 
-		Connection connection = MySQLDriver.connect("root", "");
+		Connection connection = MySQLDriver.connect();
 		try {
 			Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
 					ResultSet.CONCUR_READ_ONLY);
@@ -350,8 +359,9 @@ public class AdminOperations {
 
 	}
 
+	//Function to view issued books
 	public static void viewIssuedBooks(String title) {
-		Connection connection = MySQLDriver.connect("root", "");
+		Connection connection = MySQLDriver.connect();
 		try {
 			Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
 					ResultSet.CONCUR_READ_ONLY);
@@ -390,6 +400,7 @@ public class AdminOperations {
 
 	}
 
+	//Function to issue book
 	public static void issueBook() {
 		issueBookFrame = Library.newJframeWindow("Issue Book", 600, 400, JFrame.DISPOSE_ON_CLOSE);
 		JLabel id, Uroll, Uname, iDate;
@@ -438,7 +449,7 @@ public class AdminOperations {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				Connection connection = MySQLDriver.connect("root", "");
+				Connection connection = MySQLDriver.connect();
 
 				try {
 					if(issueIDInput.getText().isEmpty() || issueRollInput.getText().isEmpty()) {
@@ -484,6 +495,7 @@ public class AdminOperations {
 		});
 	}
 	
+	//Function to enroll student
 	public static void enrollStudent() {
 		enrollStudent = Library.newJframeWindow("Enroll Student", 600, 400, JFrame.DISPOSE_ON_CLOSE);
 		JLabel Uroll, Uname;
@@ -537,7 +549,7 @@ public class AdminOperations {
 				}
 				
 				if (allow) {
-					Connection connection = MySQLDriver.connect("root", "");
+					Connection connection = MySQLDriver.connect();
 					try {
 						Statement statement = connection.createStatement();	
 						ResultSet set1 = statement.executeQuery("Select * from students where roll_number=" + enrollStudentRoll.getText());
@@ -558,6 +570,7 @@ public class AdminOperations {
 		});
 	}
 
+	//Function to return book
 	public static void returnBook(String bookId, JFrame dataFrame) {
 		returnBookFrame = Library.newJframeWindow("Return Book", 600, 500, JFrame.DISPOSE_ON_CLOSE);
 		JLabel id, book_name, Uroll, issuer_name, issue_Date, rDate;
@@ -608,7 +621,7 @@ public class AdminOperations {
 		returnIssueDate.setFont(new Font("Arial",Font.PLAIN,20));
 		returnDateInput.setFont(new Font("Arial",Font.PLAIN,20));
 		
-		Connection connection = MySQLDriver.connect("root", "");
+		Connection connection = MySQLDriver.connect();
 		try {
 			Statement statement = connection.createStatement();
 			ResultSet set1 = statement.executeQuery("Select * from issuedBookData where id=" + bookId);
@@ -677,8 +690,9 @@ public class AdminOperations {
 
 	}
 
+	//Funtion to view returned books
 	public static void viewReturnedBooks() {
-		Connection connection = MySQLDriver.connect("root", "");
+		Connection connection = MySQLDriver.connect();
 		try {
 			Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
 					ResultSet.CONCUR_READ_ONLY);
@@ -715,6 +729,7 @@ public class AdminOperations {
 
 	}
 	
+	//Function to add user
 	public static void addUser() {
 		JLabel userN = new JLabel("Username");
 		JLabel userP = new JLabel("Password");
@@ -757,7 +772,7 @@ public class AdminOperations {
 				} else if (!String.copyValueOf(userPassword.getPassword()).equals(String.copyValueOf(userConfirmPassword.getPassword()))) {
 					GeneralOperations.alert("Success","Please Enter password correctly");
 				} else {
-					Connection connection = MySQLDriver.connect("root", "");
+					Connection connection = MySQLDriver.connect();
 					try {
 						Statement statement = connection.createStatement();	
 						ResultSet set1 = statement.executeQuery("Select * from users where username='" + userInput.getText() +"'");

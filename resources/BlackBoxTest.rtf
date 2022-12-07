@@ -1,0 +1,64 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2639
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww27440\viewh12820\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 #\
+# Test specification for Siena HierarchicalDispatcher "application"\
+#\
+# (C) University of California Irvine,\
+#     Oregon State University, and\
+#     Georgia Tech, 2001\
+#\
+\
+Login:\
+	credentials:\
+		Valid.		[property loginsuccess]\
+		Invalid.		[property loginerror] [error]\
+Users:\
+	Add user:\
+		Valid.		[if loginsuccess] [property usercreated]\
+		Invalid.		[if loginsuccess]	 \
+		Empty.		[if loginsuccess]\
+	View user:\
+		Yes.			[if usercreated]\
+	Delete User:\
+		Yes.			[if usercreated]\
+		No.			[if usercreated]\
+Student:\
+	Register:\
+		Valid.		[if loginsuccess] [property userreg]\
+		Invalid.		[if loginsuccess]	\
+		Empty.		[if loginsuccess]	\
+	View Students:\
+		View.		[if usercreated]\
+Book:\
+	Add Books:\
+		Valid.		[if loginsuccess] [property addbook]\
+		Invalid.		[if loginsuccess]	\
+		Empty.		[if loginsuccess]	\
+	View Books:\
+		View.		[if addbook]\
+	Issue Books:\
+		Valid.		[if loginsuccess && addbook && userreg] [property issuebook]\
+		Invalid.		[if loginsuccess && !addbook && !userreg]\
+		Empty.		[if loginsuccess && !addbook && !userreg]\
+	View Issued Books:\
+		View.		\
+	Return Books:\
+		Yes.	[if issuebook] [property returnbook]\
+		No.		[if issuebook]\
+	View Return Books:\
+		View.		\
+	Delete Books:\
+		Yes.	[if addbook] [property deletebook]\
+		No.	[if addbook]\
+Logout:\
+	Sign-out:\
+		Yes.			[if loginsuccess]\
+		No.			[if !loginsuccess]\
+\
+\
+}

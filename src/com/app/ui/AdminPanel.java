@@ -22,6 +22,8 @@ public class AdminPanel {
 	public static JButton viewStudent;
 	public static JFrame adminFrame;
 
+	
+	//Function to display admin panel
 	public static void ShowAdminMenu(String name, int id) throws IOException {
 
 		JLabel label = new JLabel("Select an option");

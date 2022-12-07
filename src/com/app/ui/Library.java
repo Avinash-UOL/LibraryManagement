@@ -32,33 +32,27 @@ public class Library {
 	
 
 	public static void main(String[] args) {
-		//AdminOperations.refresh();
 		try {
 			mainMenu();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
+	//Function to launch the library management application
 	public static void mainMenu() throws Exception {
 
 		newFrame("Welcome to the Library", 800, 700);
 		frame.setLayout(null);
 
 		bgImage = ImageIO.read(Library.class.getResourceAsStream("/background.jpg"));
-		//JLabel background = new JLabel(new ImageIcon(resoucePath));
 		JLabel background = new JLabel(new ImageIcon(bgImage));
 		JLabel labelT = new JLabel("Welcome to the Library");
 		labelT.setHorizontalAlignment(JLabel.CENTER);
 		labelT.setBounds(380, 20, 450, 40);
 		labelT.setFont(new Font("Arial", Font.BOLD, 40));
 		labelT.setForeground(Color.white);
-		//labelT.setBorder(BorderFactory.createLineBorder(Color.black));
 		frame.add(labelT);
-
-		//background.setBounds(0, 0, 800, 700);
-		//frame.setSize(799, 699);
 		frame.setSize(1200, 600);
 		background.setBounds(0, 0, frame.getWidth(), frame.getHeight());
 		
@@ -69,6 +63,7 @@ public class Library {
 
 	}
 
+	//Function to create a new frame
 	public static void newFrame(String title, int w, int h) {
 		frame = new JFrame(title);
 		frame.setSize(w, h);
@@ -77,6 +72,7 @@ public class Library {
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 
+	//Function to create a new frame window
 	public static JFrame newJframeWindow(String title, int w, int h, int closeop) {
 		JFrame iframe = new JFrame(title);
 		iframe.setSize(w, h);
@@ -87,6 +83,7 @@ public class Library {
 		return iframe;
 	}
 	
+	//Function to login
 	public static void login() {
 		userN = new JLabel("Username");
 		userN.setForeground(Color.white);
@@ -124,7 +121,7 @@ public class Library {
 					JOptionPane.showMessageDialog(null, "Please Enter password");
 				} else {
 
-					Connection connection = MySQLDriver.connect("root", "");
+					Connection connection = MySQLDriver.connect();
 					String st = ("select * from users where username='" + uname + "' and password='" + upass + "'");
 					Statement statement;
 					try {
