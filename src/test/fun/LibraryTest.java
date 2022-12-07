@@ -25,11 +25,6 @@ import com.app.ui.Library;
 
 public class LibraryTest {
 
-	//@Test 
-    //public void launchMainMenu() throws Exception{  
-		//Library.mainMenu();
-    //} 
-	
 	@Test 
     public void testLoginWithBlankUsername() throws Exception{ 
 		Library.main(null);

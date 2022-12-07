@@ -34,7 +34,7 @@ public class GeneralOperations {
 	
 	public static String processedID = "";
 	
-	
+	//Function to display alert
 	public static void alert(String alertType, String messageText) {
 		okButton = new JButton("OK");
 		okButton.setBounds(20, 80, 80, 25);
@@ -73,6 +73,7 @@ public class GeneralOperations {
 		});
 	}
 	
+	//Function to display confirmation dialog box
 	public static void confirmation(String title, String messageText, String id) {
 		processedID = id;
 		yesButton = new JButton("Yes");
@@ -96,11 +97,16 @@ public class GeneralOperations {
 		yesButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				AdminOperations.dataFrame.setVisible(false);
-				AdminOperations.dataFrame.dispose();
+				if(title.equalsIgnoreCase("Logout")) {
+					AdminPanel.adminFrame.setVisible(false);
+					AdminPanel.adminFrame.dispose();
+				}else {
+					AdminOperations.dataFrame.setVisible(false);
+					AdminOperations.dataFrame.dispose();
+				}
 				optionFrame.setVisible(false);
 				optionFrame.dispose();
-				Connection connection = MySQLDriver.connect("root", "");	
+				Connection connection = MySQLDriver.connect();	
 				try {
     				Statement statement = connection.createStatement();
     				if(title.equalsIgnoreCase("Delete Books")) {
@@ -153,9 +159,11 @@ public class GeneralOperations {
 		
 	}
 	
+	
+	//Function to get issued book from database
 	public static String getIssuedBook() {
 		String issuedBookID = "";
-		Connection connection = MySQLDriver.connect("root", "");
+		Connection connection = MySQLDriver.connect();
 		try {
 			Statement statement = connection.createStatement();	
 			ResultSet set1 = statement.executeQuery("Select * from bookData where issued='1' LIMIT 1");
@@ -171,9 +179,10 @@ public class GeneralOperations {
 		return issuedBookID;
 	}
 	
+	//Function to get available books from database
 	public static String getAvailableBook() {
 		String availableBookID = "";
-		Connection connection = MySQLDriver.connect("root", "");
+		Connection connection = MySQLDriver.connect();
 		try {
 			Statement statement = connection.createStatement();	
 			ResultSet set1 = statement.executeQuery("Select * from bookData where issued='0' LIMIT 1");
@@ -189,9 +198,10 @@ public class GeneralOperations {
 		return availableBookID;
 	}
 	
+	//Function to get valid student roll number
 	public static String getValidStudentRollNumber() {
 		String availableStudent = "";
-		Connection connection = MySQLDriver.connect("root", "");
+		Connection connection = MySQLDriver.connect();
 		try {
 			Statement statement = connection.createStatement();	
 			ResultSet set1 = statement.executeQuery("Select * from students LIMIT 1");

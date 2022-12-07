@@ -3,10 +3,12 @@ package com.app.driver;
 import java.sql.*;
 
 public class MySQLDriver {
-	public static Connection connect(String username, String password) {
-		String url = "jdbc:mysql://sql289.main-hosting.eu/u582529536_library";
-		username = "u582529536_libraryuser";
-		password = "LibraryPassword123";
+	
+	//SQL Connection String
+	public static Connection connect() {
+		String url = "jdbc:mysql://sql687.main-hosting.eu/u541335849_group12library";
+		String username = "u541335849_group12user";
+		String password = "Group12@123";
 		Connection con;
 		try {
 			con = DriverManager.getConnection(url, username, password);
@@ -18,39 +20,12 @@ public class MySQLDriver {
 		return null;
 	}
 
-	public static void displayTable(Connection connection,String tableName) {
-		try {
-			Statement statement = connection.createStatement();
-			ResultSet rs = statement.executeQuery("select * from "+tableName);
-			while (rs.next()) {
-				System.out.println(rs.getInt(1) + " , " + rs.getString(2) + " , " + rs.getString(3));
-			}
-			statement.close();
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
-	}
-
-	public static void resetAutoIncrement(Connection connection, String query) {
-		try {
-			Statement statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery(query);
-			while (resultSet.next()) {
-				System.out.println("Max id = " + resultSet.getInt(1));
-			}
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-	}
-
+	//SQL Insert Query
 	public static void insertToTable(Connection connection, String query) {
 		try {
 			Statement statement = connection.createStatement();
 			int n = statement.executeUpdate(query);
-			System.out.println("Query OK," + n + " rows affected");
+			//System.out.println("Query OK," + n + " rows affected");
 			statement.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -58,40 +33,4 @@ public class MySQLDriver {
 		}
 	}
 
-	public static void DeleteTable(Connection connection, String query) {
-		try {
-			Statement statement = connection.createStatement();
-			int n = statement.executeUpdate(query);
-			System.out.println("Query OK," + n + " rows affected");
-			statement.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	public static void DDLQuery(Connection connection, String query) {
-		try {
-			Statement statement = connection.createStatement();
-			statement.execute(query);
-			statement.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-
-	}
-	public static void DMLQuery(Connection connection, String query) {
-		try {
-			Statement statement = connection.createStatement();
-			statement.executeUpdate(query);
-			statement.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-
-	}
 }
